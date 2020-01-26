@@ -1,0 +1,123 @@
+#!/bin/env python3
+
+import argparse
+from dynaconf import settings
+from installer import install_cluster, delete_cluster, storage
+
+
+arguments = {
+    'common': {
+        'cloud': {'help': 'Cloud provider to be used, one of (openstack, aws)', "type": str, 'target': 'common'},
+        'dns_provider': {'help': 'Provider of dns used with openstack cloud', 'type': str, 'target': 'dns'},
+        'os_image': {'help': 'Image to override'}
+    },
+    'install': {
+        'base_domain': {'help': 'Base domain for the cluster', 'type': str, 'target': 'install'},
+        'master_flavor': {'target': 'install'},
+        'pull_secret_file': {'target': 'install'},
+        'cluster_directory': {'target': 'install'},
+        'ssh_key': {'target': 'install'},
+        'cluster_region': {'target': 'install'},
+        'list_of_regions': {'help': 'List of regions, comma separated values', 'target': 'install'},
+        'osp_cloud': {'target': 'install'},
+        'osp_base_flavor': {'target': 'install'},
+        'network_list': {'help': 'List of usable openstack networks, comma separated values', 'target': 'dns'},
+        'worker_flavor': {'help': 'flavor of worker node'},
+        'certificate_bundle_file': {'help': 'CA bundle file'},
+    },
+    'dns': {
+        'dns_ttl': {'type': int},
+        'dns_key_file': dict(),
+        'dns_zone': dict(),
+        'dns_server': dict()
+    }
+}
+
+
+def merge_dictionaries(from_args):
+    result = {'cloud': None,
+              'dns': None,
+              'installer': from_args.installer,
+              'cloud_name': None,
+              'cluster_name': from_args.cluster_name,
+              'os_image': None}
+    if not from_args.__contains__('cloud'):
+        return result
+    defaults = settings.as_dict()
+    if from_args.dns_provider is not None:
+        result['dns'] = {'provider': from_args.dns_provider,
+                         'conf': defaults['DNS'][from_args.dns_provider]}
+        result['dns']['conf'].update(
+            {j[4:]: vars(from_args)[j]
+             for j in arguments['dns']
+             if vars(from_args)[j] is not None}
+        )
+    if from_args.cloud is not None:
+        result['os_image'] = from_args.os_image
+        result['cloud_name'] = from_args.cloud
+        result['cloud'] = defaults['CLOUD'][from_args.cloud]
+        result['cloud'].update(
+            {j: vars(from_args)[j] for j in arguments['install']
+             if vars(from_args)[j] is not None}
+        )
+        if result['dns'] is not None:
+            result['dns']['conf'].update({
+                'cluster_name': from_args.cluster_name,
+                'base_domain': result['cloud']['base_domain']
+            })
+    return result
+
+
+def exec_install_cluster(conf):
+    storage.check_repository()
+    install_cluster(
+        conf['cloud_name'],
+        conf['cluster_name'],
+        conf['cloud'],
+        conf['installer'],
+        os_image=conf['os_image'],
+        dns_settings=conf['dns']
+    )
+    storage.write_changes(conf['cluster_name'])
+
+
+def exec_delete_cluster(conf):
+    storage.check_repository()
+    delete_cluster(conf['cluster_name'], conf['installer'])
+    storage.delete_directory(conf['cluster_name'])
+
+
+def setup_parser():
+    commons = argparse.ArgumentParser(add_help=False)
+    commons.add_argument('--cluster-name', required=True, help='Name of the cluster')
+    commons.add_argument('--installer',
+                         required=True,
+                         help='Executable binary of openshift install cli')
+
+    parser = argparse.ArgumentParser("osia")
+
+    sub_parsers = parser.add_subparsers()
+
+    install = sub_parsers.add_parser('install', help='Install new cluster', parents=[commons])
+
+    for arg, value in {k: v for a in arguments for k, v in arguments[a].items()}.items():
+        install.add_argument(f"--{arg.replace('_', '-')}",
+                             help=value.get('help', None),
+                             type=value.get('type', None))
+
+    install.set_defaults(func=exec_install_cluster)
+
+    clean = sub_parsers.add_parser('clean', help='Remove cluster', parents=[commons])
+    clean.set_defaults(func=exec_delete_cluster)
+    return parser
+
+
+def main():
+    parser = setup_parser()
+    args = parser.parse_args()
+    conf = merge_dictionaries(args)
+    args.func(conf)
+
+
+if __name__ == '__main__':
+    main()

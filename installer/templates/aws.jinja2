@@ -1,0 +1,6 @@
+{% extends 'install-config-base.yaml.jinja2' %}
+{% block platform %}
+  aws:
+    region: {{ cluster_region }}{% endblock %}
+{% block networkIp %}10.0.0.0/16{% endblock %}
+{% block deploymentType %}aws{% endblock %}

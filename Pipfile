@@ -1,0 +1,12 @@
+[packages]
+openstacksdk = "*"
+boto3 = "*"
+jinja2 = "*"
+dynaconf = "*"
+gitpython = "*"
+
+[requires]
+python_version = "3.7"
+
+[dev-packages]
+pipenv-setup = "*"

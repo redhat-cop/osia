@@ -1,0 +1,33 @@
+apiVersion: v1
+baseDomain: {{ base_domain }}
+{% if certificate_bundle %}additionalTrustBundle: |
+  {{ certificate_bundle | indent( width=2, indentfirst=False) }}{% endif %}
+compute:
+- hyperthreading: Enabled
+  name: worker
+{% if worker_flavor %}  platform:
+    {% block deploymentType %}{% endblock %}:
+      type: {{ worker_flavor }}
+{% else %}  platform: {}{% endif %}
+  replicas: {{ worker_replicas|default("3") }}
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+{% if master_flavor %}  platform:
+    {{ self.deploymentType() }}:
+      type: {{ master_flavor }}{% else %}  platform: {}{% endif %}
+  replicas: {{ master_replicas|default("3") }}
+metadata:
+  name: {{ cluster_name }}
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineCIDR: {% block networkIp %}{% endblock %}
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:{% block platform %}{% endblock %}
+pullSecret: '{{ pull_secret }}'
+sshKey: |
+  {{ ssh_key }}

@@ -1,37 +1,48 @@
 #!/bin/env python3
 
 import argparse
+from typing import List
+
 from dynaconf import settings
 from installer import install_cluster, delete_cluster, storage
 
 
+def identity(in_attr):
+    return in_attr
+
+
+def read_list(in_str: str) -> List[str]:
+    return in_str.split(',')
+
 arguments = {
     'common': {
-        'cloud': {'help': 'Cloud provider to be used, one of (openstack, aws)', "type": str, 'target': 'common'},
-        'dns_provider': {'help': 'Provider of dns used with openstack cloud', 'type': str, 'target': 'dns'},
+        'cloud': {'help': 'Cloud provider to be used, one of (openstack, aws)', 'type': str},
+        'dns_provider': {'help': 'Provider of dns used with openstack cloud', 'type': str},
         'os_image': {'help': 'Image to override'}
     },
     'install': {
-        'base_domain': {'help': 'Base domain for the cluster', 'type': str, 'target': 'install'},
-        'master_flavor': {'target': 'install'},
-        'pull_secret_file': {'target': 'install'},
-        'cluster_directory': {'target': 'install'},
-        'ssh_key': {'target': 'install'},
-        'cluster_region': {'target': 'install'},
-        'list_of_regions': {'help': 'List of regions, comma separated values', 'target': 'install'},
-        'osp_cloud': {'target': 'install'},
-        'osp_base_flavor': {'target': 'install'},
-        'network_list': {'help': 'List of usable openstack networks, comma separated values', 'target': 'dns'},
+        'base_domain': {'help': 'Base domain for the cluster', 'type': str},
+        'master_flavor': {'help': 'Flavor used for master nodes'},
+        'pull_secret_file': {'help': 'File containing pull secret from `cloud.redhat.com`'},
+        'ssh_key_file': {'help': 'File with ssh key used by installer'},
+        'list_of_regions': {'help': 'List of regions, comma separated values', 'proc': read_list},
+        'osp_cloud': {'help': 'Name of openstack cloud identity in clouds.yaml'},
+        'osp_base_flavor': {'help': 'Base flavor to be used in openstack'},
+        'network_list': {'help': 'List of usable openstack networks, comma separated values', 'proc': read_list},
         'worker_flavor': {'help': 'flavor of worker node'},
         'certificate_bundle_file': {'help': 'CA bundle file'},
     },
     'dns': {
-        'dns_ttl': {'type': int},
-        'dns_key_file': dict(),
-        'dns_zone': dict(),
-        'dns_server': dict()
+        'dns_ttl': {'help': 'TTL of the records', 'type': int},
+        'dns_key_file': {'help': 'Keyfile used to access dns server via nsupdate'},
+        'dns_zone': {'help': 'Zone on server where the record will be stored'},
+        'dns_server': {'help': 'Address of server with running bind'}
     }
 }
+
+for a in [v for a in arguments for u, v in arguments[a].items()]:
+    if not a.get('proc', None):
+        a['proc'] = identity
 
 
 def merge_dictionaries(from_args):
@@ -48,8 +59,8 @@ def merge_dictionaries(from_args):
         result['dns'] = {'provider': from_args.dns_provider,
                          'conf': defaults['DNS'][from_args.dns_provider]}
         result['dns']['conf'].update(
-            {j[4:]: vars(from_args)[j]
-             for j in arguments['dns']
+            {j[4:]: i['proc'](vars(from_args)[j])
+             for j, i in arguments['dns'].items()
              if vars(from_args)[j] is not None}
         )
     if from_args.cloud is not None:
@@ -57,7 +68,7 @@ def merge_dictionaries(from_args):
         result['cloud_name'] = from_args.cloud
         result['cloud'] = defaults['CLOUD'][from_args.cloud]
         result['cloud'].update(
-            {j: vars(from_args)[j] for j in arguments['install']
+            {j: i['proc'](vars(from_args)[j]) for j, i in arguments['install'].items()
              if vars(from_args)[j] is not None}
         )
         if result['dns'] is not None:
@@ -68,8 +79,10 @@ def merge_dictionaries(from_args):
     return result
 
 
-def exec_install_cluster(conf):
-    storage.check_repository()
+def exec_install_cluster(args):
+    conf = merge_dictionaries(args)
+    if not args.skip_git:
+        storage.check_repository()
     install_cluster(
         conf['cloud_name'],
         conf['cluster_name'],
@@ -78,13 +91,27 @@ def exec_install_cluster(conf):
         os_image=conf['os_image'],
         dns_settings=conf['dns']
     )
-    storage.write_changes(conf['cluster_name'])
+    if not args.skip_git:
+        storage.write_changes(conf['cluster_name'])
 
 
-def exec_delete_cluster(conf):
-    storage.check_repository()
+def exec_delete_cluster(args):
+    conf = merge_dictionaries(args)
+
+    if not args.skip_git:
+        storage.check_repository()
+
     delete_cluster(conf['cluster_name'], conf['installer'])
-    storage.delete_directory(conf['cluster_name'])
+
+    if not args.skip_git:
+        storage.delete_directory(conf['cluster_name'])
+
+
+def get_helper(parser):
+    def printer(conf):
+        print("Operation set, please specify either install or clean!")
+        parser.print_help()
+    return printer
 
 
 def setup_parser():
@@ -93,9 +120,13 @@ def setup_parser():
     commons.add_argument('--installer',
                          required=True,
                          help='Executable binary of openshift install cli')
+    commons.add_argument('--skip-git',
+                         help='When set, the persistance will be skipped',
+                         default=False,
+                         required=False)
 
     parser = argparse.ArgumentParser("osia")
-
+    parser.set_defaults(func=get_helper(parser))
     sub_parsers = parser.add_subparsers()
 
     install = sub_parsers.add_parser('install', help='Install new cluster', parents=[commons])
@@ -115,8 +146,7 @@ def setup_parser():
 def main():
     parser = setup_parser()
     args = parser.parse_args()
-    conf = merge_dictionaries(args)
-    args.func(conf)
+    args.func(args)
 
 
 if __name__ == '__main__':

@@ -29,7 +29,8 @@ class AWSInstaller(AbstractInstaller):
 
 
 def get_free_region(order_list: List[str]) -> Union[str, type(None)]:
-    """Finds first free region in provided list, if provided list is empty, it searches all regions"""
+    """Finds first free region in provided list,
+    if provided list is empty, it searches all regions"""
     candidates = order_list[:]
     if len(candidates) == 0:
         candidates = [v['RegionName'] for v in boto3.client('ec2').describe_regions()['Regions']]

@@ -14,6 +14,7 @@ def identity(in_attr):
 def read_list(in_str: str) -> List[str]:
     return in_str.split(',')
 
+
 arguments = {
     'common': {
         'cloud': {'help': 'Cloud provider to be used, one of (openstack, aws)', 'type': str},
@@ -28,7 +29,8 @@ arguments = {
         'list_of_regions': {'help': 'List of regions, comma separated values', 'proc': read_list},
         'osp_cloud': {'help': 'Name of openstack cloud identity in clouds.yaml'},
         'osp_base_flavor': {'help': 'Base flavor to be used in openstack'},
-        'network_list': {'help': 'List of usable openstack networks, comma separated values', 'proc': read_list},
+        'network_list': {'help': 'List of usable openstack networks, comma separated values',
+                         'proc': read_list},
         'worker_flavor': {'help': 'flavor of worker node'},
         'certificate_bundle_file': {'help': 'CA bundle file'},
     },

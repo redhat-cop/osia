@@ -1,6 +1,5 @@
 from .base import DNSUtil
 import boto3
-import json
 
 
 def _get_connection():
@@ -15,7 +14,7 @@ class Route53Provider(DNSUtil):
         self.zone_id = None
         self.api_ip = None
         self.apps_ip = None
-    
+
     def provider_name(self):
         return 'route53'
 
@@ -32,15 +31,15 @@ class Route53Provider(DNSUtil):
         change_batch = {
             'Changes': [
                 {'Action': mode,
-                    'ResourceRecordSet': {
-                        'Name': '.'.join([prefix,  self.cluster_name, self.base_domain]) + '.',
-                        'Type': 'A',
-                        'TTL': self.ttl,
-                        'ResourceRecords': [
-                            {'Value': ip_addr}
-                        ]
-                    }
-                }
+                 'ResourceRecordSet': {
+                     'Name': '.'.join([prefix,  self.cluster_name, self.base_domain]) + '.',
+                     'Type': 'A',
+                     'TTL': self.ttl,
+                     'ResourceRecords': [
+                         {'Value': ip_addr}
+                     ]
+                 }
+                 }
             ]
         }
         _get_connection().change_resource_record_sets(
@@ -60,5 +59,3 @@ class Route53Provider(DNSUtil):
             self._execute_command('api', 'DELETE', self.api_ip)
         if self.apps_ip is not None:
             self._execute_command('*.apps', 'DELETE', self.apps_ip)
-
-

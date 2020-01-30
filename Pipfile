@@ -10,3 +10,4 @@ python_version = "3.7"
 
 [dev-packages]
 pipenv-setup = "*"
+flake8 = "*"

@@ -19,7 +19,11 @@ def execute_installer(installer, base_path, operation, os_image=None):
             raise Exception("Failed execution of installer")
 
 
-def install_cluster(cloud_provider, cluster_name, configuration, installer, os_image=None, dns_settings=None):
+def install_cluster(cloud_provider,
+                    cluster_name, configuration,
+                    installer,
+                    os_image=None,
+                    dns_settings=None):
     mkdir("./" + cluster_name)
     inst = InstallerProvider.instance()[cloud_provider](cluster_name=cluster_name, **configuration)
     inst.acquire_resources()

@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from jinja2 import Environment, PackageLoader, FileSystemLoader
+from jinja2 import Environment, PackageLoader
 from typing import ClassVar
 
 

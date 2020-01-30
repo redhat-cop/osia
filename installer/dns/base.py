@@ -60,7 +60,7 @@ class DNSUtil(ABC):
     @abstractmethod
     def provider_name(self):
         pass
-    
+
     def marshall(self, out_dir: str):
         with open(f"{out_dir}/{self.provider_name()}.json", "w") as output:
             json.dump(self, output, default=lambda o: o.__dict__)

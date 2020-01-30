@@ -44,7 +44,8 @@ def find_fit_network(osp_connection: Connection, networks: List[str]) -> Union[s
 
 
 def find_cluster_ports(osp_connection: Connection, cluster_name: str):
-    port_list = [k for k in osp_connection.list_ports() if k.name.startswith(cluster_name) and k.name.endswith('ingress-port')]
+    port_list = [k for k in osp_connection.list_ports()
+                 if k.name.startswith(cluster_name) and k.name.endswith('ingress-port')]
     port = next(iter(port_list), None)
     if port is None:
         raise Exception(f"Ingress port for cluster {cluster_name} was not found")
@@ -64,7 +65,7 @@ def get_floating_ip(osp_connection: Connection, cloud: str, network_id: str, clu
         update_json(f"{cluster_name}/fips.json", fip.floating_ip_address)
     else:
         with open(f"{cluster_name}/fips.json", "w") as fips:
-            d = {'cloud': cloud, 'fips': [fip.floating_ip_address,]}
+            d = {'cloud': cloud, 'fips': [fip.floating_ip_address]}
             json.dump(d, fips)
     return fip
 
@@ -101,5 +102,8 @@ class OpenstackInstaller(AbstractInstaller):
 
     def post_installation(self):
         ingress_port = find_cluster_ports(self.connection, self.cluster_name)
-        self.apps_fip = get_floating_ip(self.connection, self.osp_cloud, self.network, self.cluster_name)
+        self.apps_fip = get_floating_ip(self.connection,
+                                        self.osp_cloud,
+                                        self.network,
+                                        self.cluster_name)
         attach_fip_to_port(self.connection, self.apps_fip, ingress_port)

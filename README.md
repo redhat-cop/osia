@@ -1,4 +1,5 @@
 # OSIA
+
 OpenShift infra automation
 
 ## Goal
@@ -14,4 +15,62 @@ __Main features__
 * Manage DNS entries based on the installation properties and results
 * Clean everything once the cluster is not needed
 
+## Installation
+
+In order to successfully install this program and run it you need folowing dependencies:
+
+* `python3` and `pip`
+* `git` for the management of installation files
+* `nsupdate` for management of DNS for openstack installation
+
+For installation just find the newest release at
+[CEE Gitlab](https://gitlab.cee.redhat.com/3scale-qe/infra/osia/-/releases) and find the python
+package there. After download just install it via 
+
+```
+$ pip install ${PATH_TO_DOWNLOADED_PACKAGE}
+```
+
 ## Usage
+
+The tool operates over directory which is expected to be git repository and where the service will
+store generated configuration and push it to the upstream repository of currently working branch.
+
+### Common configuration
+
+The common configuraiton is done by yaml file called `settings.yaml` that should be located at
+`CWD` (root of the repository in most cases).
+
+The configuration has following structure:
+
+```
+default:
+  cloud:
+    openstack:
+      base_domain: ''
+      certificate_bundle_file: ''
+      pull_secret_file: ''
+      ssh_key_file: ''
+      osp_cloud: ''
+      osp_base_flavor: ''
+      network_list: []
+    aws:
+      base_domain: ''
+      pull_secret_file: ''
+      certificate_bundle_file: ''
+      ssh_key_file: ''
+      worker_flavor: '' 
+      list_of_regions: []
+  dns:
+    route53:
+      ttl: 0
+    nsupdate:
+      server: ''
+      zone: ''
+      key_file: ''
+      ttl: 0 
+```
+
+Every key here is overridible by the argument passed to the installer.
+For explanation of any key, please check he documentation below.
+

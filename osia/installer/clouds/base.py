@@ -55,7 +55,7 @@ class AbstractInstaller(ABC):
     @classmethod
     def get_environment(cls) -> Environment:
         if cls.__env is None:
-            cls.__env = Environment(loader=PackageLoader("installer"))
+            cls.__env = Environment(loader=PackageLoader("osia.installer"))
         return cls.__env
 
 

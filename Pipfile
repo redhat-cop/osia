@@ -4,6 +4,7 @@ boto3 = "*"
 jinja2 = "*"
 dynaconf = "*"
 gitpython = "*"
+beautifulsoup4 = "*"
 
 [requires]
 python_version = "3.7"

@@ -119,7 +119,7 @@ setup(
     packages=find_packages(exclude=["contrib", "docs", "tests"]),  # Required
     package_data={'': ['*.jinja2']},
     # data_files=[("installer/templates", findall("installer/templates/"))],
-    scripts=["osia"],
+    entry_points={'console_scripts': ['osia = osia.cli:main_cli']},
     include_package_data=True,
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this

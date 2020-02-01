@@ -1,10 +1,8 @@
-#!/bin/env python3
-
 import argparse
 from typing import List
 
 from dynaconf import settings
-from installer import install_cluster, delete_cluster, storage
+from osia.installer import install_cluster, delete_cluster, storage
 
 
 def identity(in_attr):
@@ -145,11 +143,9 @@ def setup_parser():
     return parser
 
 
-def main():
+def main_cli():
     parser = setup_parser()
     args = parser.parse_args()
     args.func(args)
 
 
-if __name__ == '__main__':
-    main()

@@ -2,7 +2,7 @@ import boto3
 from typing import List, Union
 
 
-from installer.clouds.base import AbstractInstaller
+from osia.installer.clouds.base import AbstractInstaller
 
 
 class AWSInstaller(AbstractInstaller):

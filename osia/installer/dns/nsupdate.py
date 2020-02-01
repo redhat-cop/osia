@@ -1,4 +1,4 @@
-from .base import DNSUtil
+from osia.installer.dns.base import DNSUtil
 from subprocess import Popen, PIPE
 
 

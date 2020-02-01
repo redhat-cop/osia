@@ -1,4 +1,4 @@
-from installer.clouds.base import AbstractInstaller
+from osia.installer.clouds.base import AbstractInstaller
 from openstack.connection import from_config, Connection
 from typing import List, Union
 import json

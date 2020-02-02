@@ -1,4 +1,8 @@
+import logging
 from git import Repo
+
+class StorageException(Exception):
+    pass
 
 
 def check_repository():
@@ -7,17 +11,15 @@ def check_repository():
     fetches = rep.remotes[remote.remote_name].fetch()
     for fetch in fetches:
         if fetch.name == remote.name and fetch.commit != rep.commit():
-            raise Exception("Remote has commit that are not merged, please fix this")
-
+            logging.error("There are changes in remote repository, we won't be able to push in the end")
     if rep.is_dirty():
-        raise Exception("There are not committed changes in your repository, please fix this")
+        logging.warning("There are not committed changes in your repository, please fix this")
 
     return rep, remote
 
 
 def write_changes(cluster_directory):
     rep, remote = check_repository()
-
     rep.index.add(cluster_directory)
     rep.index.commit(f"[OCP Installer] installation files for {cluster_directory} added")
     rep.remotes[remote.remote_name].push()

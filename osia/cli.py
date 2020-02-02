@@ -1,9 +1,9 @@
 import argparse
+import logging
 from typing import List
 
 from dynaconf import settings
-from osia.installer import install_cluster, delete_cluster, storage
-
+from osia.installer import install_cluster, delete_cluster, storage, download_installer
 
 def identity(in_attr):
     return in_attr
@@ -44,11 +44,21 @@ for a in [v for a in arguments for u, v in arguments[a].items()]:
     if not a.get('proc', None):
         a['proc'] = identity
 
+def resolve_installer(from_args):
+    if from_args.installer is None and from_args.installer_version is None:
+        raise Exception('Either installer or installer-version must be passed')
+    if from_args.installer:
+        return from_args.installer
+
+    return download_installer(from_args.installer_version,
+                              from_args.installers_dir,
+                              from_args.installer_devel)
+
 
 def merge_dictionaries(from_args):
     result = {'cloud': None,
               'dns': None,
-              'installer': from_args.installer,
+              'installer': resolve_installer(from_args),
               'cloud_name': None,
               'cluster_name': from_args.cluster_name,
               'os_image': None}
@@ -83,6 +93,7 @@ def exec_install_cluster(args):
     conf = merge_dictionaries(args)
     if not args.skip_git:
         storage.check_repository()
+    logging.info('Starting the installer with cloud name %s', conf['cloud_name'])
     install_cluster(
         conf['cloud_name'],
         conf['cluster_name'],
@@ -118,8 +129,12 @@ def setup_parser():
     commons = argparse.ArgumentParser(add_help=False)
     commons.add_argument('--cluster-name', required=True, help='Name of the cluster')
     commons.add_argument('--installer',
-                         required=True,
-                         help='Executable binary of openshift install cli')
+                         required=False,
+                         help='Executable binary of openshift install cli', default=None)
+    commons.add_argument('--installer-version', help='Version of downloader to be downloaded', default='latest', type=str)
+    commons.add_argument('--installer-devel', default=None, required=False,
+                         help='If set installer will be searched at devel repository')
+    commons.add_argument('--installers-dir', help='Folder where installers are stored', required=False, default='installers' )
     commons.add_argument('--skip-git',
                          help='When set, the persistance will be skipped',
                          default=False,

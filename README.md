@@ -15,21 +15,6 @@ __Main features__
 * Manage DNS entries based on the installation properties and results
 * Clean everything once the cluster is not needed
 
-## Installation
-
-In order to successfully install this program and run it you need folowing dependencies:
-
-* `python3` and `pip`
-* `git` for the management of installation files
-* `nsupdate` for management of DNS for openstack installation
-
-For installation just find the newest release at
-[CEE Gitlab](https://gitlab.cee.redhat.com/3scale-qe/infra/osia/-/releases) and find the python
-package there. After download just install it via 
-
-```
-$ pip install ${PATH_TO_DOWNLOADED_PACKAGE}
-```
 
 ## Usage
 

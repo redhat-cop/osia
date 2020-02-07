@@ -1,5 +1,6 @@
 from osia.installer.dns.base import DNSUtil
 from subprocess import Popen, PIPE
+import logging
 
 
 class NSUpdate(DNSUtil):
@@ -10,10 +11,8 @@ class NSUpdate(DNSUtil):
         self.zone = zone
 
     def _exec_nsupdate(self, string: str):
-        nsu = Popen(["nsupdate", "-k", self.key_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        out, err = nsu.communicate(string.encode('utf-8'))
-        print(out)
-        print(err)
+        nsu = Popen(["nsupdate", "-k", self.key_file], stdin=PIPE, universal_newlines=True)
+        nsu.communicate(string)
 
     def provider_name(self):
         return 'nsupdate'
@@ -26,6 +25,7 @@ zone {self.zone}"""
         return f"{self.cluster_name}.{self.base_domain}"
 
     def add_api_domain(self, ip_addr: str):
+        logging.info("Adding api domain api.%s for floating ip addr %s", self._get_suffix(), ip_addr)
         nsupdate_string = f"""{self._get_start()}
 update add api.{self._get_suffix()} {self.ttl} A {ip_addr}
 send
@@ -33,6 +33,7 @@ send
         self._exec_nsupdate(nsupdate_string)
 
     def add_apps_domain(self, ip_addr: str):
+        logging.info("Adding apps domain *.apps.%s for floating ip addr %s", self._get_suffix(), ip_addr)
         nsupdate_string = f"""{self._get_start()}
 update add apps.{self._get_suffix()} {self.ttl} A {ip_addr}
 update add \\*.apps.{self._get_suffix()} {self.ttl} A {ip_addr}

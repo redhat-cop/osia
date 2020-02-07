@@ -11,7 +11,6 @@ def execute_installer(installer, base_path, operation, os_image=None):
     if os_image is not None:
         additional_env = environ.copy()
         additional_env.update({'OPENSHIFT_INSTALL_OS_IMAGE_OVERRIDE': os_image})
-    print(base_path)
     with Popen([installer, operation, 'cluster', '--dir', base_path],
                env=additional_env, universal_newlines=True) as proc:
         proc.wait()
@@ -30,12 +29,10 @@ def install_cluster(cloud_provider,
     dns_prov = None
     if dns_settings is not None:
         dns_prov = DNSProvider.instance()[dns_settings['provider']](**dns_settings['conf'])
-        print(dns_prov.__dict__)
         dns_prov.add_api_domain(inst.osp_FIP)
         dns_prov.marshall(cluster_name)
 
     inst.process_template()
-    print(installer, cluster_name, os_image)
     execute_installer(installer, cluster_name, 'create', os_image=os_image)
 
     inst.post_installation()

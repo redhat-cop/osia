@@ -26,17 +26,19 @@ def _current_platform():
         return "mac"
     raise Exception(f"Unrecognized platform {platform}")
 
+
 def get_url(directory):
     lst = requests.get(directory, allow_redirects=True)
     tree = BeautifulSoup(lst.content, 'html.parser')
     links = tree.find_all('a')
     installer, version = None, None
     for k in links:
-        match = VERSION_RE.match(next(k.children))
+        match = VERSION_RE.match(k.get('href'))
         if match and match.group('platform') == _current_platform():
             installer = lst.url + k.get('href')
             version = match.group('version')
     return installer, version
+
 
 def get_devel_url(version):
     req = requests.get(BUILD_ROOT + version, allow_redirects=True)
@@ -63,16 +65,8 @@ def _get_storage_path(version, install_base):
     return spec_path.as_posix()
 
 
-def get_installer(tar_url: str, target: str):
-    result = None
-    logging.info('Starting the download of installer')
-    req = requests.get(tar_url, stream=True, allow_redirects=True)
-    buf = NamedTemporaryFile()
-    for block in req.iter_content(chunk_size=4096):
-        buf.write(block)
-    buf.flush()
-    logging.debug('Download finished, starting extraction')
-    with tarfile.open(buf.name) as tar:
+def _extract_tar(buffer: NamedTemporaryFile, target: str, ):
+    with tarfile.open(buffer.name) as tar:
         inst_info = None
         for i in tar.getmembers():
             if i.name == 'openshift-install':
@@ -84,12 +78,27 @@ def get_installer(tar_url: str, target: str):
         with result.open('wb') as output:
             copyfileobj(stream, output)
         result.chmod(result.stat().st_mode | stat.S_IXUSR)
+
+
+def get_installer(tar_url: str, target: str):
+    result = None
+    logging.info('Starting the download of installer')
+    req = requests.get(tar_url, stream=True, allow_redirects=True)
+    buf = NamedTemporaryFile()
+    for block in req.iter_content(chunk_size=4096):
+        buf.write(block)
+    buf.flush()
+    logging.debug('Download finished, starting extraction')
+    _extract_tar(buf, target)
     buf.close()
+
     logging.info(f'Installer extracted to %s', result.as_posix())
     return result.as_posix()
 
 
 def download_installer(installer_version: str, dest_directory: str, devel: bool):
+    logging.debug("Getting version %s, storing to directory %s and devel is %r", installer_version, dest_directory, devel)
+
     downloader = get_prod_url
     if devel:
         downloader = get_devel_url

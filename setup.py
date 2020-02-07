@@ -18,8 +18,8 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="osia",
-    version="0.1.1",
-    description="Openshift infra automation",
+    version="0.1.2",
+    description="OpenShift infra automation",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="fixme",
@@ -48,6 +48,7 @@ setup(
         "cffi==1.13.2",
         "chardet==3.0.4",
         "click==7.0",
+        "coloredlogs==10.0",
         "cryptography==2.8",
         "decorator==4.4.1",
         "docutils==0.15.2",
@@ -55,6 +56,7 @@ setup(
         "dynaconf==2.2.2",
         "gitdb2==2.0.6",
         "gitpython==3.0.5",
+        "humanfriendly==4.18",
         "idna==2.8",
         "iso8601==0.1.12",
         "jinja2==2.11.1",
@@ -86,7 +88,7 @@ setup(
     extras_require={"dev": []},
     dependency_links=[],
     project_urls={
-        "Bug Reports": "https://github.com/pypa/sampleproject/issues",
-        "Source": "https://github.com/pypa/sampleproject/",
+        "Bug Reports": "https://github.com/redhat-cop/osia/issues",
+        "Source": "https://github.com/redhat-cop/osia",
     },
 )

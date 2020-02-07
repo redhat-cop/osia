@@ -1,11 +1,12 @@
 import argparse
-import logging
-from typing import List
+import logging, coloredlogs
+from typing import List, Callable, Union, Any
 
 from dynaconf import settings
 from osia.installer import install_cluster, delete_cluster, storage, download_installer
 
-def identity(in_attr):
+
+def identity(in_attr: str) -> str:
     return in_attr
 
 
@@ -118,7 +119,7 @@ def exec_delete_cluster(args):
         storage.delete_directory(conf['cluster_name'])
 
 
-def get_helper(parser):
+def get_helper(parser: argparse.ArgumentParser):
     def printer(conf):
         print("Operation set, please specify either install or clean!")
         parser.print_help()
@@ -132,13 +133,11 @@ def setup_parser():
                          required=False,
                          help='Executable binary of openshift install cli', default=None)
     commons.add_argument('--installer-version', help='Version of downloader to be downloaded', default='latest', type=str)
-    commons.add_argument('--installer-devel', default=None, required=False,
+    commons.add_argument('--installer-devel', action='store_true',
                          help='If set installer will be searched at devel repository')
     commons.add_argument('--installers-dir', help='Folder where installers are stored', required=False, default='installers' )
     commons.add_argument('--skip-git',
-                         help='When set, the persistance will be skipped',
-                         default=False,
-                         required=False)
+                         help='When set, the persistance will be skipped', action='store_true')
 
     parser = argparse.ArgumentParser("osia")
     parser.set_defaults(func=get_helper(parser))
@@ -159,6 +158,7 @@ def setup_parser():
 
 
 def main_cli():
+    coloredlogs.install(level='INFO')
     parser = setup_parser()
     args = parser.parse_args()
     args.func(args)

@@ -1,4 +1,4 @@
-from osia.installer.clouds.base import AbstractInstaller
+from .base import AbstractInstaller
 from openstack.connection import from_config, Connection
 from typing import List, Union
 import json
@@ -86,6 +86,7 @@ class OpenstackInstaller(AbstractInstaller):
         self.network = None
         self.connection = None
         self.apps_fip = None
+        self.osp_network = None
 
     def get_template_name(self):
         return 'openstack.jinja2'
@@ -107,3 +108,4 @@ class OpenstackInstaller(AbstractInstaller):
                                         self.network,
                                         self.cluster_name)
         attach_fip_to_port(self.connection, self.apps_fip, ingress_port)
+        self.apps_fip = apps_fip.floating_ip_address

@@ -1,8 +1,9 @@
 import boto3
-from typing import List, Union
+from typing import List, Optional
 
 
-from osia.installer.clouds.base import AbstractInstaller
+from .base import AbstractInstaller
+import logging
 
 
 class AWSInstaller(AbstractInstaller):
@@ -28,16 +29,16 @@ class AWSInstaller(AbstractInstaller):
         pass
 
 
-def get_free_region(order_list: List[str]) -> Union[str, type(None)]:
+def get_free_region(order_list: List[str]) -> Optional[str]:
     """Finds first free region in provided list,
     if provided list is empty, it searches all regions"""
     candidates = order_list[:]
     if len(candidates) == 0:
         candidates = [v['RegionName'] for v in boto3.client('ec2').describe_regions()['Regions']]
     for candidate in candidates:
-        print(candidate)
         region = boto3.client('ec2', candidate)
         count = len(region.describe_vpcs()['Vpcs'])
         if count < 5:
+            logging.debug("Selected region %s", candidate)
             return candidate
     return None

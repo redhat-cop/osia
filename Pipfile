@@ -5,6 +5,7 @@ jinja2 = "*"
 dynaconf = "*"
 gitpython = "*"
 beautifulsoup4 = "*"
+coloredlogs = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,9 +1,15 @@
 from os import mkdir, path, environ
 from subprocess import Popen
+import logging
 
 from .clouds import InstallerProvider
 from .clouds.openstack import delete_fips
 from .dns import DNSProvider
+
+
+class InstallerExecutionException(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
 
 
 def execute_installer(installer, base_path, operation, os_image=None):
@@ -15,7 +21,7 @@ def execute_installer(installer, base_path, operation, os_image=None):
                env=additional_env, universal_newlines=True) as proc:
         proc.wait()
         if proc.returncode != 0:
-            raise Exception("Failed execution of installer")
+            raise InstallerExecutionException("Failed execution of installer")
 
 
 def install_cluster(cloud_provider,
@@ -33,7 +39,12 @@ def install_cluster(cloud_provider,
         dns_prov.marshall(cluster_name)
 
     inst.process_template()
-    execute_installer(installer, cluster_name, 'create', os_image=os_image)
+
+    try:
+        execute_installer(installer, cluster_name, 'create', os_image=os_image)
+    except InstallerExecutionException as e:
+        logging.error(e)
+        delete_cluster(cluster_name, installer)
 
     inst.post_installation()
 

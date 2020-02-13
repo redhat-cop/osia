@@ -3,7 +3,7 @@ import logging, coloredlogs
 from typing import List, Callable, Union, Any
 
 from dynaconf import settings
-from osia.installer import install_cluster, delete_cluster, storage, download_installer
+from .installer import install_cluster, delete_cluster, storage, download_installer
 
 
 def identity(in_attr: str) -> str:
@@ -16,8 +16,9 @@ def read_list(in_str: str) -> List[str]:
 
 arguments = {
     'common': {
-        'cloud': {'help': 'Cloud provider to be used, one of (openstack, aws)', 'type': str},
-        'dns_provider': {'help': 'Provider of dns used with openstack cloud', 'type': str},
+        'cloud': {'help': 'Cloud provider to be used.', 'type': str, 'choices': ['openstack', 'aws']},
+        'dns_provider': {'help': 'Provider of dns used with openstack cloud', 'type': str, 'choices':
+                         ['nsupdate', 'route53']},
         'os_image': {'help': 'Image to override'}
     },
     'install': {
@@ -44,6 +45,7 @@ arguments = {
 for a in [v for a in arguments for u, v in arguments[a].items()]:
     if not a.get('proc', None):
         a['proc'] = identity
+
 
 def resolve_installer(from_args):
     if from_args.installer is None and from_args.installer_version is None:
@@ -125,19 +127,25 @@ def get_helper(parser: argparse.ArgumentParser):
         parser.print_help()
     return printer
 
+def create_commons():
+    commons = argparse.ArgumentParser(add_help=False)
+    common_arguments = [
+        [['--cluster-name'], dict(required=True, help='Name of the cluster')],
+        [['--installer'], dict(required=False,
+                         help='Executable binary of openshift install cli', default=None)],
+        [['--installer-version'], dict(help='Version of downloader to be downloaded', default='latest', type=str)],
+        [['--installer-devel'], dict(action='store_true',
+                                help='If set installer will be searched at devel repository')],
+        [['--installers-dir'], dict(help='Folder where installers are stored', required=False, default='installers')],
+        [['--skip-git'], dict(help='When set, the persistance will be skipped', action='store_true')],
+        [['-v', '--verbose'], dict(help='Increase verbosity level', action='store_true')]
+    ]
+    for k in common_arguments:
+        commons.add_argument(*k[0], **k[1])
+    return commons
 
 def setup_parser():
-    commons = argparse.ArgumentParser(add_help=False)
-    commons.add_argument('--cluster-name', required=True, help='Name of the cluster')
-    commons.add_argument('--installer',
-                         required=False,
-                         help='Executable binary of openshift install cli', default=None)
-    commons.add_argument('--installer-version', help='Version of downloader to be downloaded', default='latest', type=str)
-    commons.add_argument('--installer-devel', action='store_true',
-                         help='If set installer will be searched at devel repository')
-    commons.add_argument('--installers-dir', help='Folder where installers are stored', required=False, default='installers' )
-    commons.add_argument('--skip-git',
-                         help='When set, the persistance will be skipped', action='store_true')
+    commons = create_commons()
 
     parser = argparse.ArgumentParser("osia")
     parser.set_defaults(func=get_helper(parser))
@@ -158,9 +166,12 @@ def setup_parser():
 
 
 def main_cli():
-    coloredlogs.install(level='INFO')
+
     parser = setup_parser()
     args = parser.parse_args()
+    if args.verbose:
+        coloredlogs.install(level='DEBUG')
+    else:
+        coloredlogs.install(level='INFO')
+
     args.func(args)
-
-

@@ -66,6 +66,7 @@ def _get_storage_path(version, install_base):
 
 
 def _extract_tar(buffer: NamedTemporaryFile, target: str, ):
+    result = None
     with tarfile.open(buffer.name) as tar:
         inst_info = None
         for i in tar.getmembers():
@@ -78,6 +79,7 @@ def _extract_tar(buffer: NamedTemporaryFile, target: str, ):
         with result.open('wb') as output:
             copyfileobj(stream, output)
         result.chmod(result.stat().st_mode | stat.S_IXUSR)
+    return result
 
 
 def get_installer(tar_url: str, target: str):
@@ -89,7 +91,7 @@ def get_installer(tar_url: str, target: str):
         buf.write(block)
     buf.flush()
     logging.debug('Download finished, starting extraction')
-    _extract_tar(buf, target)
+    result = _extract_tar(buf, target)
     buf.close()
 
     logging.info(f'Installer extracted to %s', result.as_posix())
@@ -106,7 +108,7 @@ def download_installer(installer_version: str, dest_directory: str, devel: bool)
     root = Path(dest_directory).joinpath(version)
 
     if root.exists() and root.joinpath('openshift-install').exists():
-        logging.info('Found downloader at %s', root.as_posix())
+        logging.info('Found installer at %s', root.as_posix())
         return root.joinpath('openshift-install').as_posix()
     root.mkdir()
     return get_installer(url, root.as_posix())

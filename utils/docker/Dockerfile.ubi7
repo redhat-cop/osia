@@ -1,0 +1,19 @@
+FROM registry.access.redhat.com/ubi7/python-36:latest as build
+ARG OSIA_VERSION
+
+USER root
+ADD . ./
+RUN ./setup.py bdist_wheel &&\
+    cp dist/osia-$OSIA_VERSION-py3-none-any.whl /
+
+
+FROM registry.access.redhat.com/ubi7/python-36:latest
+ARG OSIA_VERSION
+
+USER root
+COPY --from=build /osia-$OSIA_VERSION-py3-none-any.whl ./
+RUN yum install -y bind-utils git &&\
+    pip install osia-$OSIA_VERSION-py3-none-any.whl &&\
+    rm osia-$OSIA_VERSION-py3-none-any.whl
+USER default
+

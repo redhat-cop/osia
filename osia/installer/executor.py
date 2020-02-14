@@ -1,5 +1,6 @@
 from os import mkdir, path, environ
 from subprocess import Popen
+from pathlib import Path
 import logging
 
 from .clouds import InstallerProvider
@@ -28,8 +29,13 @@ def install_cluster(cloud_provider,
                     cluster_name, configuration,
                     installer,
                     os_image=None,
+                    skip_clean=False,
                     dns_settings=None):
-    mkdir("./" + cluster_name)
+    p = Path("./") / cluster_name
+    if p.exists():
+        logging.error("Path %s already exists, remove it before continuing", p.as_posix())
+        return
+    p.mkdir()
     inst = InstallerProvider.instance()[cloud_provider](cluster_name=cluster_name, **configuration)
     inst.acquire_resources()
     dns_prov = None
@@ -44,7 +50,9 @@ def install_cluster(cloud_provider,
         execute_installer(installer, cluster_name, 'create', os_image=os_image)
     except InstallerExecutionException as e:
         logging.error(e)
-        delete_cluster(cluster_name, installer)
+        if not skip_clean:
+            delete_cluster(cluster_name, installer)
+            return
 
     inst.post_installation()
 
@@ -57,10 +65,13 @@ def delete_cluster(cluster_name, installer):
     dns_prov = DNSProvider.instance().load(cluster_name)
     if dns_prov is not None:
         dns_prov.delete_domains()
-    fips_file = f"{cluster_name}/fips.json"
-    if path.exists(fips_file):
+    fips_file = Path(cluster_name) / "fips.json"
+    if fips_file.exists():
         delete_fips(fips_file)
-    try:
-        execute_installer(installer, cluster_name, 'destroy')
-    except:
-        execute_installer(installer, cluster_name, 'destroy')
+    for k in [1, 2]:
+        try:
+            logging.debug("Attempt to clean #%d", k)
+            execute_installer(installer, cluster_name, 'destroy')
+            break
+        except InstallerExecutionException as e:
+            logging.error("Re-executing installer due to error", e)

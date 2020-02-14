@@ -18,7 +18,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="osia",
-    version="0.1.3",
+    version="0.1.4",
     description="OpenShift infra automation",
     long_description=long_description,
     long_description_content_type="text/markdown",

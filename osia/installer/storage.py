@@ -21,7 +21,9 @@ def check_repository():
 def write_changes(cluster_directory):
     rep, remote = check_repository()
     rep.index.add(cluster_directory)
+    logging.info("Commit ")
     rep.index.commit(f"[OCP Installer] installation files for {cluster_directory} added")
+
     rep.remotes[remote.remote_name].push()
 
 

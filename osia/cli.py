@@ -127,6 +127,7 @@ def get_helper(parser: argparse.ArgumentParser):
         parser.print_help()
     return printer
 
+
 def create_commons():
     commons = argparse.ArgumentParser(add_help=False)
     common_arguments = [
@@ -143,6 +144,7 @@ def create_commons():
     for k in common_arguments:
         commons.add_argument(*k[0], **k[1])
     return commons
+
 
 def setup_parser():
     commons = create_commons()
@@ -166,10 +168,9 @@ def setup_parser():
 
 
 def main_cli():
-
     parser = setup_parser()
     args = parser.parse_args()
-    if args.verbose:
+    if vars(args).get('verbose', False):
         coloredlogs.install(level='DEBUG')
     else:
         coloredlogs.install(level='INFO')

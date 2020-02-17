@@ -10,14 +10,17 @@ class AbstractInstaller(ABC):
                  cluster_name=None,
                  base_domain=None,
                  master_flavor=None,
+                 master_replicas=None,
                  pull_secret_file=None,
                  ssh_key_file=None,
                  worker_flavor=None,
+                 worker_replicas=None,
                  certificate_bundle_file=None,
                  cluster_directory=None):
         self.cluster_name = cluster_name
         self.base_domain = base_domain
         self.master_flavor = master_flavor
+        self.master_replicas = master_replicas
         self.pull_secret_file = pull_secret_file
         self.pull_secret = None
         self.ssh_key_file = ssh_key_file
@@ -25,6 +28,7 @@ class AbstractInstaller(ABC):
         self.certificate_bundle_file = certificate_bundle_file
         self.certificate_bundle = None
         self.worker_flavor = worker_flavor
+        self.worker_replicas = worker_replicas
         self.cluster_directory = cluster_directory
 
     @abstractmethod

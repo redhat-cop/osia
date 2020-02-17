@@ -13,3 +13,4 @@ python_version = "3"
 [dev-packages]
 pipenv-setup = "*"
 flake8 = "*"
+ipython = "*"

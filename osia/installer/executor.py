@@ -1,4 +1,4 @@
-from os import mkdir, path, environ
+from os import environ
 from subprocess import Popen
 from pathlib import Path
 import logging
@@ -68,6 +68,7 @@ def delete_cluster(cluster_name, installer):
     fips_file = Path(cluster_name) / "fips.json"
     if fips_file.exists():
         delete_fips(fips_file)
+        fips_file.unlink()
     for k in [1, 2]:
         try:
             logging.debug("Attempt to clean #%d", k)

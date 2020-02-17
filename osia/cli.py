@@ -1,6 +1,7 @@
 import argparse
-import logging, coloredlogs
-from typing import List, Callable, Union, Any
+import logging
+import coloredlogs
+from typing import List
 
 from dynaconf import settings
 from .installer import install_cluster, delete_cluster, storage, download_installer
@@ -16,14 +17,16 @@ def read_list(in_str: str) -> List[str]:
 
 arguments = {
     'common': {
-        'cloud': {'help': 'Cloud provider to be used.', 'type': str, 'choices': ['openstack', 'aws']},
-        'dns_provider': {'help': 'Provider of dns used with openstack cloud', 'type': str, 'choices':
-                         ['nsupdate', 'route53']},
+        'cloud': {'help': 'Cloud provider to be used.', 'type': str,
+                  'choices': ['openstack', 'aws']},
+        'dns_provider': {'help': 'Provider of dns used with openstack cloud',
+                         'type': str, 'choices': ['nsupdate', 'route53']},
         'os_image': {'help': 'Image to override'}
     },
     'install': {
         'base_domain': {'help': 'Base domain for the cluster', 'type': str},
         'master_flavor': {'help': 'Flavor used for master nodes'},
+        'master_replicas': {'help': 'Number of replicas for master nodes', 'type': int},
         'pull_secret_file': {'help': 'File containing pull secret from `cloud.redhat.com`'},
         'ssh_key_file': {'help': 'File with ssh key used by installer'},
         'list_of_regions': {'help': 'List of regions, comma separated values', 'proc': read_list},
@@ -32,6 +35,7 @@ arguments = {
         'network_list': {'help': 'List of usable openstack networks, comma separated values',
                          'proc': read_list},
         'worker_flavor': {'help': 'flavor of worker node'},
+        'worker_replicas': {'help': 'Number of replicas of worker nodes', 'type': int},
         'certificate_bundle_file': {'help': 'CA bundle file'},
     },
     'dns': {
@@ -133,12 +137,15 @@ def create_commons():
     common_arguments = [
         [['--cluster-name'], dict(required=True, help='Name of the cluster')],
         [['--installer'], dict(required=False,
-                         help='Executable binary of openshift install cli', default=None)],
-        [['--installer-version'], dict(help='Version of downloader to be downloaded', default='latest', type=str)],
+                               help='Executable binary of openshift install cli', default=None)],
+        [['--installer-version'], dict(help='Version of downloader to be downloaded',
+                                       default='latest', type=str)],
         [['--installer-devel'], dict(action='store_true',
-                                help='If set installer will be searched at devel repository')],
-        [['--installers-dir'], dict(help='Folder where installers are stored', required=False, default='installers')],
-        [['--skip-git'], dict(help='When set, the persistance will be skipped', action='store_true')],
+                                     help='If set installer will be searched at devel repository')],
+        [['--installers-dir'], dict(help='Folder where installers are stored',
+                                    required=False, default='installers')],
+        [['--skip-git'], dict(help='When set, the persistance will be skipped',
+                              action='store_true')],
         [['-v', '--verbose'], dict(help='Increase verbosity level', action='store_true')]
     ]
     for k in common_arguments:

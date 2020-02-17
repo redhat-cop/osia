@@ -99,7 +99,8 @@ def get_installer(tar_url: str, target: str):
 
 
 def download_installer(installer_version: str, dest_directory: str, devel: bool):
-    logging.debug("Getting version %s, storing to directory %s and devel is %r", installer_version, dest_directory, devel)
+    logging.debug("Getting version %s, storing to directory %s and devel is %r",
+                  installer_version, dest_directory, devel)
 
     downloader = get_prod_url
     if devel:

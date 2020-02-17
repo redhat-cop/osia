@@ -25,7 +25,8 @@ zone {self.zone}"""
         return f"{self.cluster_name}.{self.base_domain}"
 
     def add_api_domain(self, ip_addr: str):
-        logging.info("Adding api domain api.%s for floating ip addr %s", self._get_suffix(), ip_addr)
+        logging.info("Adding api domain api.%s for floating ip addr %s",
+                     self._get_suffix(), ip_addr)
         nsupdate_string = f"""{self._get_start()}
 update add api.{self._get_suffix()} {self.ttl} A {ip_addr}
 send
@@ -33,7 +34,8 @@ send
         self._exec_nsupdate(nsupdate_string)
 
     def add_apps_domain(self, ip_addr: str):
-        logging.info("Adding apps domain *.apps.%s for floating ip addr %s", self._get_suffix(), ip_addr)
+        logging.info("Adding apps domain *.apps.%s for floating ip addr %s",
+                     self._get_suffix(), ip_addr)
         nsupdate_string = f"""{self._get_start()}
 update add apps.{self._get_suffix()} {self.ttl} A {ip_addr}
 update add \\*.apps.{self._get_suffix()} {self.ttl} A {ip_addr}

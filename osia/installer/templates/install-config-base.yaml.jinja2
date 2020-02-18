@@ -9,14 +9,14 @@ compute:
     {% block deploymentType %}{% endblock %}:
       type: {{ worker_flavor }}
 {% else %}  platform: {}{% endif %}
-  replicas: {{ worker_replicas|default("3") }}
+  replicas: {{ worker_replicas|default("3", true) }}
 controlPlane:
   hyperthreading: Enabled
   name: master
 {% if master_flavor %}  platform:
     {{ self.deploymentType() }}:
       type: {{ master_flavor }}{% else %}  platform: {}{% endif %}
-  replicas: {{ master_replicas|default("3") }}
+  replicas: {{ master_replicas|default("3", true) }}
 metadata:
   name: {{ cluster_name }}
 networking:

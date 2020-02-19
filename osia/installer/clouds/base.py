@@ -16,7 +16,8 @@ class AbstractInstaller(ABC):
                  worker_flavor=None,
                  worker_replicas=None,
                  certificate_bundle_file=None,
-                 cluster_directory=None):
+                 cluster_directory=None,
+                 **kwargs):
         self.cluster_name = cluster_name
         self.base_domain = base_domain
         self.master_flavor = master_flavor

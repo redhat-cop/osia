@@ -1,6 +1,7 @@
 from .base import AbstractInstaller
+from operator import itemgetter
 from openstack.connection import from_config, Connection
-from typing import List, Union
+from typing import List, Optional
 import json
 from os import path
 
@@ -32,15 +33,18 @@ def delete_fips(fips_file):
         connection.network.delete_ip(i)
 
 
-def find_fit_network(osp_connection: Connection, networks: List[str]) -> Union[str, type(None)]:
+def find_best_fit(networks: dict) -> str:
+    return min(networks.items(), key=itemgetter(1))[0]
+
+
+def find_fit_network(osp_connection: Connection, networks: List[str]) -> Optional[str]:
     named_networks = {k['name']: k for k in osp_connection.list_networks() if k['name'] in networks}
-    result = None
+    results = dict()
     for net_name in networks:
         net_avail = osp_connection.network.get_network_ip_availability(named_networks[net_name])
-        if net_avail['used_ips'] + 3 <= net_avail['total_ips']:
-            result = (named_networks[net_name]['id'], net_name)
-            break
-    return result
+        results[net_name] = net_avail['total_ips'] / net_avail['uset_ips']
+    result = find_best_fit(results)
+    return (named_networks[result]['id'], result)
 
 
 def find_cluster_ports(osp_connection: Connection, cluster_name: str):

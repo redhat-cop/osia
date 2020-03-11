@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import ClassVar, Union
+from typing import ClassVar, Optional
 from os import path
+from pathlib import Path
 import json
 
 
@@ -26,7 +27,7 @@ class DNSProvider:
     def __getitem__(self, name: str) -> ClassVar:
         return self.providers[name]
 
-    def load(self, directory: str) -> Union['DNSUtil', type(None)]:
+    def load(self, directory: str) -> Optional['DNSUtil']:
         for k in self.providers:
             if path.exists(f"{directory}/{k}.json"):
                 res = self[k]()
@@ -70,3 +71,8 @@ class DNSUtil(ABC):
             d = json.load(in_stream)
             for k in d:
                 setattr(self, k, d[k])
+
+    def delete_file(self):
+        p = Path(self.cluster_name) / f"{self.provider_name()}.json"
+        if p.exists():
+            p.unlink()

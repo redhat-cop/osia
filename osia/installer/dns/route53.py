@@ -59,3 +59,4 @@ class Route53Provider(DNSUtil):
             self._execute_command('api', 'DELETE', self.api_ip)
         if self.apps_ip is not None:
             self._execute_command('*.apps', 'DELETE', self.apps_ip)
+        self.delete_file()

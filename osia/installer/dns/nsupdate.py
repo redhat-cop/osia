@@ -51,3 +51,4 @@ update delete api.{self._get_suffix()} A
 send"""
 
         self._exec_nsupdate(nsupdate_string)
+        self.delete_file()

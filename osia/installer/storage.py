@@ -8,7 +8,8 @@ def check_repository():
     fetches = rep.remotes[remote.remote_name].fetch()
     for fetch in fetches:
         if fetch.name == remote.name and fetch.commit != rep.commit():
-            logging.error("There are changes in remote repository, we won't be able to push in the end")
+            logging.warning("There are changes in remote repository, trying to pull")
+            rep.remotes[remote.remote_name].pull()
     if rep.is_dirty():
         logging.warning("There are not committed changes in your repository, please fix this")
 

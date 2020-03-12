@@ -42,7 +42,7 @@ def find_fit_network(osp_connection: Connection, networks: List[str]) -> Optiona
     results = dict()
     for net_name in networks:
         net_avail = osp_connection.network.get_network_ip_availability(named_networks[net_name])
-        results[net_name] = net_avail['total_ips'] / net_avail['uset_ips']
+        results[net_name] = net_avail['total_ips'] / net_avail['used_ips']
     result = find_best_fit(results)
     return (named_networks[result]['id'], result)
 

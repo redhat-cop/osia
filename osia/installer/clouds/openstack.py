@@ -34,7 +34,7 @@ def delete_fips(fips_file):
 
 
 def find_best_fit(networks: dict) -> str:
-    return min(networks.items(), key=itemgetter(1))[0]
+    return max(networks.items(), key=itemgetter(1))[0]
 
 
 def find_fit_network(osp_connection: Connection, networks: List[str]) -> Optional[str]:

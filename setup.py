@@ -42,8 +42,8 @@ setup(
     install_requires=[
         "appdirs==1.4.3",
         "beautifulsoup4==4.8.2",
-        "boto3==1.12.18",
-        "botocore==1.15.18",
+        "boto3==1.12.19",
+        "botocore==1.15.19",
         "certifi==2019.11.28",
         "cffi==1.14.0",
         "chardet==3.0.4",

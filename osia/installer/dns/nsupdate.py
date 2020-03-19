@@ -20,8 +20,12 @@ class NSUpdate(DNSUtil):
         return 'nsupdate'
 
     def _get_start(self):
-        return f"""server {self.server}
-zone {self.zone}"""
+        result = str()
+        if self.server:
+            result += f"server {self.server}\n"
+        if self.zone:
+            result += f"zone {self.zone}\n"
+        return result
 
     def _get_suffix(self):
         return f"{self.cluster_name}.{self.base_domain}"

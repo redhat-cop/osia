@@ -111,5 +111,5 @@ def download_installer(installer_version: str, dest_directory: str, devel: bool)
     if root.exists() and root.joinpath('openshift-install').exists():
         logging.info('Found installer at %s', root.as_posix())
         return root.joinpath('openshift-install').as_posix()
-    root.mkdir()
+    root.mkdir(parents=True)
     return get_installer(url, root.as_posix())

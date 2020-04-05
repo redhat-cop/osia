@@ -39,6 +39,9 @@ ARGUMENTS = {
         'worker_flavor': {'help': 'flavor of worker node'},
         'worker_replicas': {'help': 'Number of replicas of worker nodes', 'type': int},
         'certificate_bundle_file': {'help': 'CA bundle file'},
+        'images_dir': {'help': 'Directory where images should be stored', 'type': str,
+                       'default': 'images'},
+        'skip_clean': {'help': 'Skip clean when installation fails', 'action': 'store_true'},
     },
     'dns': {
         'dns_ttl': {'help': 'TTL of the records', 'type': int},
@@ -61,7 +64,7 @@ def _resolve_installer(from_args):
 
     return download_installer(from_args.installer_version,
                               from_args.installers_dir,
-                              from_args.installer_devel)
+                              from_args.installer_source)
 
 
 def _merge_dictionaries(from_args):
@@ -142,8 +145,10 @@ def _create_commons():
                                help='Executable binary of openshift install cli', default=None)],
         [['--installer-version'], dict(help='Version of downloader to be downloaded',
                                        default='latest', type=str)],
-        [['--installer-devel'], dict(action='store_true',
-                                     help='If set installer will be searched at devel repository')],
+        [['--installer-source'], dict(type=str,
+                                      help='Set the source to search for installer',
+                                      choices=["prod", "devel", "prev"],
+                                      default='prod')],
         [['--installers-dir'], dict(help='Folder where installers are stored',
                                     required=False, default='installers')],
         [['--skip-git'], dict(help='When set, the persistance will be skipped',

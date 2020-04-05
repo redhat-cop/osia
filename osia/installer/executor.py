@@ -32,7 +32,6 @@ def install_cluster(cloud_provider,
                     cluster_name, configuration,
                     installer,
                     os_image=None,
-                    skip_clean=False,
                     dns_settings=None):
     """Function represents main entrypoint to all logic necessary for
     cluster's deployment."""
@@ -57,7 +56,7 @@ def install_cluster(cloud_provider,
         execute_installer(installer, cluster_name, 'create', os_image=os_image)
     except InstallerExecutionException as exception:
         logging.error(exception)
-        if not skip_clean:
+        if inst.check_clean():
             delete_cluster(cluster_name, installer)
             return
 

@@ -25,6 +25,8 @@ class AbstractInstaller(ABC):
                  worker_replicas=None,
                  certificate_bundle_file=None,
                  cluster_directory=None,
+                 skip_clean=False,
+                 installer=None,
                  **unused_kwargs):
         self.cluster_name = cluster_name
         self.base_domain = base_domain
@@ -39,6 +41,8 @@ class AbstractInstaller(ABC):
         self.worker_flavor = worker_flavor
         self.worker_replicas = worker_replicas
         self.cluster_directory = cluster_directory
+        self.skip_clean = skip_clean
+        self.installer = installer
 
     @abstractmethod
     def acquire_resources(self):
@@ -54,6 +58,11 @@ class AbstractInstaller(ABC):
     def post_installation(self):
         """Method called after the installation is done, this is the place where,
         things like registration of apps domain and other is expected to happen."""
+
+    def check_clean(self):
+        """Method returns if installation is configured to clean resources
+        on failure."""
+        return not self.skip_clean
 
     def process_template(self):
         """Method executes creation of install-config.yaml"""

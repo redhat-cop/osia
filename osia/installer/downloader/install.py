@@ -17,6 +17,8 @@ from bs4 import BeautifulSoup
 
 PROD_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp/"
 BUILD_ROOT = "https://openshift-release-artifacts.svc.ci.openshift.org/"
+PREVIEW_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/"
+
 VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)-(?P<version>.*)\.tar\.gz")
 EXTRACTION_RE = re.compile(r'.*Extracting tools for .*, may take up to a minute.*')
 
@@ -61,7 +63,12 @@ def get_devel_url(version: str) -> str:
     return get_url(req.url)
 
 
-def get_prod_url(version: str) -> str:
+def get_prev_url(version):
+    """Returns installer url from dev-preview sources"""
+    return get_url(PREVIEW_ROOT + version)
+
+
+def get_prod_url(version):
     """Returns installer url from production sources"""
     return get_url(PROD_ROOT + version)
 
@@ -108,14 +115,21 @@ def get_installer(tar_url: str, target: str) -> str:
     return result.as_posix()
 
 
-def download_installer(installer_version: str, dest_directory: str, devel: bool) -> str:
+def download_installer(installer_version: str, dest_directory: str, source: str) -> str:
     """Starts search and extraction of installer"""
     logging.debug("Getting version %s, storing to directory %s and devel is %r",
-                  installer_version, dest_directory, devel)
+                  installer_version, dest_directory, source)
 
-    downloader = get_prod_url
-    if devel:
+    downloader = None
+    if source == "prod":
+        downloader = get_prod_url
+    elif source == "prev":
+        downloader = get_prev_url
+    elif source == "devel":
         downloader = get_devel_url
+    else:
+        raise Exception("Error for source profile " + source)
+
     url, version = downloader(installer_version)
     root = Path(dest_directory).joinpath(version)
 

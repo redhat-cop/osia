@@ -28,6 +28,7 @@ import time
 import requests
 
 from bs4 import BeautifulSoup
+from .utils import get_data
 
 
 PROD_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp/"
@@ -113,21 +114,9 @@ def _extract_tar(buffer: NamedTemporaryFile, target: str) -> Path:
     return result
 
 
-def get_installer(tar_url: str, target: str) -> str:
+def get_installer(tar_url: str, target: str):
     """Download and extract the installer into the target"""
-    result = None
-    logging.info('Starting the download of installer')
-    req = requests.get(tar_url, stream=True, allow_redirects=True)
-    buf = NamedTemporaryFile()
-    for block in req.iter_content(chunk_size=4096):
-        buf.write(block)
-    buf.flush()
-    logging.debug('Download finished, starting extraction')
-    result = _extract_tar(buf, target)
-    buf.close()
-
-    logging.info('Installer extracted to %s', result.as_posix())
-    return result.as_posix()
+    return get_data(tar_url, target, _extract_tar)
 
 
 def download_installer(installer_version: str, dest_directory: str, source: str) -> str:

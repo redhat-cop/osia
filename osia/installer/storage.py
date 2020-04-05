@@ -44,9 +44,7 @@ def write_changes(cluster_directory):
 def delete_directory(cluster_directory):
     """Function deletes commited directory both
     from local copy and from the remote repository."""
-    rep = Repo("./")
-    remote = rep.active_branch.tracking_branch()
-
+    rep, remote = check_repository()
     logging.info("Removing cluster directory from git repository %s", cluster_directory)
     rep.index.remove(cluster_directory, working_tree=True, r=True, f=True)
     rep.index.commit(f"[OCP Installer] removed installation files for {cluster_directory}")

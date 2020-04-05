@@ -1,0 +1,10 @@
+image: "registry.access.redhat.com/ubi8/python-36"
+
+before_script:
+- pip install pipenv
+
+flake8:
+  script: 
+    - pipenv update --dev
+    - pipenv run flake8 --max-line-length 100 osia
+

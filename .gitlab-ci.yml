@@ -7,4 +7,5 @@ flake8:
   script: 
     - pipenv update --dev
     - pipenv run flake8 --max-line-length 100 osia
+    - pipenv run pylint osia
 

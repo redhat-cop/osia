@@ -1,6 +1,6 @@
 image: "registry.access.redhat.com/ubi8/python-36"
 
-varaibles:
+variables:
   PIPENV_VERBOSITY: "-1"
 
 before_script:

@@ -1,5 +1,6 @@
-from osia.installer.dns.base import DNSUtil
+"""Module implements dns methods to work with route53 provider"""
 import boto3
+from osia.installer.dns.base import DNSUtil
 
 
 def _get_connection():
@@ -7,13 +8,13 @@ def _get_connection():
 
 
 class Route53Provider(DNSUtil):
-
+    """Class implements DNSUtil base specific for route53"""
     def __init__(self, api_ip=None, apps_ip=None, **kwargs):
         super().__init__(**kwargs)
 
         self.zone_id = None
-        self.api_ip = None
-        self.apps_ip = None
+        self.api_ip = api_ip
+        self.apps_ip = apps_ip
 
     def provider_name(self):
         return 'route53'
@@ -32,7 +33,7 @@ class Route53Provider(DNSUtil):
             'Changes': [
                 {'Action': mode,
                  'ResourceRecordSet': {
-                     'Name': '.'.join([prefix,  self.cluster_name, self.base_domain]) + '.',
+                     'Name': '.'.join([prefix, self.cluster_name, self.base_domain]) + '.',
                      'Type': 'A',
                      'TTL': self.ttl,
                      'ResourceRecords': [
@@ -43,8 +44,8 @@ class Route53Provider(DNSUtil):
             ]
         }
         _get_connection().change_resource_record_sets(
-                HostedZoneId=self._get_hosted_zone(),
-                ChangeBatch=change_batch)
+            HostedZoneId=self._get_hosted_zone(),
+            ChangeBatch=change_batch)
 
     def add_api_domain(self, ip_addr: str):
         self.api_ip = ip_addr

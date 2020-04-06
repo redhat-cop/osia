@@ -1,3 +1,4 @@
+"""Module contains basics and common functionality to set up DNS."""
 from abc import ABC, abstractmethod
 from typing import ClassVar, Optional
 from os import path
@@ -6,14 +7,19 @@ import json
 
 
 class DNSProvider:
+    """Class implements dynamic provier of DNSUtil base class"""
     __instance = None
 
+    # pylint: disable=protected-access
     @classmethod
     def register_provider(cls, name: str, clazz: ClassVar):
-        cls.instance()._add_provider(name, clazz)
+        """Method to dynamically register new implementation of
+        DNSUtil"""
+        cls.instance().__add_provider(name, clazz)
 
     @classmethod
-    def instance(cls):
+    def instance(cls) -> "DNSProvider":
+        """Returns singleton instance"""
         if cls.__instance is None:
             cls.__instance = cls()
         return cls.__instance
@@ -21,13 +27,15 @@ class DNSProvider:
     def __init__(self):
         self.providers = dict()
 
-    def _add_provider(self, name: str, clazz: ClassVar):
+    def __add_provider(self, name: str, clazz: ClassVar):
         self.providers[name] = clazz
 
     def __getitem__(self, name: str) -> ClassVar:
         return self.providers[name]
 
     def load(self, directory: str) -> Optional['DNSUtil']:
+        """Method loads saved configuration of specific DNSUtil from
+        file"""
         for k in self.providers:
             if path.exists(f"{directory}/{k}.json"):
                 res = self[k]()
@@ -37,7 +45,7 @@ class DNSProvider:
 
 
 class DNSUtil(ABC):
-
+    """Class implements basic settings for """
     def __init__(self,
                  cluster_name=None,
                  base_domain=None,
@@ -48,31 +56,34 @@ class DNSUtil(ABC):
 
     @abstractmethod
     def add_api_domain(self, ip_addr: str):
-        pass
+        """Method registers api domain in selected provider"""
 
     @abstractmethod
     def add_apps_domain(self, ip_addr: str):
-        pass
+        """Method registers apps domain in selected provider"""
 
     @abstractmethod
     def delete_domains(self):
-        pass
+        """Method deletes all registered domains in provider"""
 
     @abstractmethod
     def provider_name(self):
-        pass
+        """Get name of provider"""
 
     def marshall(self, out_dir: str):
+        """Method stores current configuration on DNS provider to $provider_name.json"""
         with open(f"{out_dir}/{self.provider_name()}.json", "w") as output:
             json.dump(self, output, default=lambda o: o.__dict__)
 
     def unmarshall(self, in_dir: str):
+        """Method loads stored configuration of DNS into provider object"""
         with open(f"{in_dir}/{self.provider_name()}.json") as in_stream:
-            d = json.load(in_stream)
-            for k in d:
-                setattr(self, k, d[k])
+            dns_conf = json.load(in_stream)
+            for k in dns_conf:
+                setattr(self, k, dns_conf[k])
 
     def delete_file(self):
-        p = Path(self.cluster_name) / f"{self.provider_name()}.json"
-        if p.exists():
-            p.unlink()
+        """Method removes unneeded configuration file"""
+        file_path = Path(self.cluster_name) / f"{self.provider_name()}.json"
+        if file_path.exists():
+            file_path.unlink()

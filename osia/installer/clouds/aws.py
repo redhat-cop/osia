@@ -1,12 +1,14 @@
-import boto3
+"""Module implements configuration object for aws installation"""
 from typing import List, Optional
-
+import logging
+import boto3
 
 from .base import AbstractInstaller
-import logging
 
 
 class AWSInstaller(AbstractInstaller):
+    """Object containing all configuration related
+    to aws installation"""
     def __init__(self,
                  cluster_region=None,
                  list_of_regions=None,

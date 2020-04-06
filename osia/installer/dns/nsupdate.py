@@ -1,9 +1,11 @@
-from osia.installer.dns.base import DNSUtil
-from subprocess import Popen, PIPE
+"""Module implements methods specific for nsupate provider"""
 import logging
+from subprocess import Popen, PIPE
+from osia.installer.dns.base import DNSUtil
 
 
 class NSUpdate(DNSUtil):
+    """Implementation of DNSUtil specific for nsupdate dns provider"""
     def __init__(self, key_file=None, server=None, zone=None, **kwargs):
         super().__init__(**kwargs)
         self.key_file = key_file

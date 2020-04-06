@@ -1,3 +1,4 @@
+"""Executor module implements controlling logic of cluster installation"""
 from os import environ
 from subprocess import Popen
 from pathlib import Path
@@ -9,11 +10,13 @@ from .dns import DNSProvider
 
 
 class InstallerExecutionException(Exception):
+    """Class represents exception raised by installer failure"""
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
 
 
 def execute_installer(installer, base_path, operation, os_image=None):
+    """Function executes actual installation of OpenShift"""
     additional_env = None
     if os_image is not None and os_image:
         additional_env = environ.copy()
@@ -31,25 +34,29 @@ def install_cluster(cloud_provider,
                     os_image=None,
                     skip_clean=False,
                     dns_settings=None):
-    p = Path("./") / cluster_name
-    if p.exists():
-        logging.error("Path %s already exists, remove it before continuing", p.as_posix())
+    """Function represents main entrypoint to all logic necessary for
+    cluster's deployment."""
+    # pylint: disable=too-many-arguments
+    cluster_path = Path("./") / cluster_name
+    if cluster_path.exists():
+        logging.error("Path %s already exists, remove it before continuing",
+                      cluster_path.as_posix())
         return
-    p.mkdir()
+    cluster_path.mkdir()
     inst = InstallerProvider.instance()[cloud_provider](cluster_name=cluster_name, **configuration)
     inst.acquire_resources()
     dns_prov = None
     if dns_settings is not None:
         dns_prov = DNSProvider.instance()[dns_settings['provider']](**dns_settings['conf'])
-        dns_prov.add_api_domain(inst.osp_FIP)
+        dns_prov.add_api_domain(inst.osp_fip)
         dns_prov.marshall(cluster_name)
 
     inst.process_template()
 
     try:
         execute_installer(installer, cluster_name, 'create', os_image=os_image)
-    except InstallerExecutionException as e:
-        logging.error(e)
+    except InstallerExecutionException as exception:
+        logging.error(exception)
         if not skip_clean:
             delete_cluster(cluster_name, installer)
             return
@@ -62,6 +69,8 @@ def install_cluster(cloud_provider,
 
 
 def delete_cluster(cluster_name, installer):
+    """Function is the controller of all actions leading to the
+    cluster's deletion."""
     dns_prov = DNSProvider.instance().load(cluster_name)
     if dns_prov is not None:
         dns_prov.delete_domains()
@@ -74,5 +83,5 @@ def delete_cluster(cluster_name, installer):
             logging.debug("Attempt to clean #%d", k)
             execute_installer(installer, cluster_name, 'destroy')
             break
-        except InstallerExecutionException as e:
-            logging.error("Re-executing installer due to error", e)
+        except InstallerExecutionException as exception:
+            logging.error("Re-executing installer due to error %s", exception)

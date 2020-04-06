@@ -1,11 +1,19 @@
+"""Module implements common base for install-config
+creation.
+It also implements logic to obtain correct specification
+for specified installation platform"""
 from abc import abstractmethod, ABC
-from jinja2 import Environment, PackageLoader
 from typing import ClassVar
+from jinja2 import Environment, PackageLoader
 
 
 class AbstractInstaller(ABC):
+    """Base object for configuration of install-config"""
+    # pylint: disable=too-many-instance-attributes
+
     __env: Environment = None
 
+    # pylint: disable=too-many-arguments
     def __init__(self,
                  cluster_name=None,
                  base_domain=None,
@@ -17,7 +25,7 @@ class AbstractInstaller(ABC):
                  worker_replicas=None,
                  certificate_bundle_file=None,
                  cluster_directory=None,
-                 **kwargs):
+                 **unused_kwargs):
         self.cluster_name = cluster_name
         self.base_domain = base_domain
         self.master_flavor = master_flavor
@@ -34,19 +42,23 @@ class AbstractInstaller(ABC):
 
     @abstractmethod
     def acquire_resources(self):
-        pass
+        """Method which is called before the install-config can be generated.
+        The method should be used to get all necessary dependencies to fill
+        in details in install-config"""
 
     @abstractmethod
     def get_template_name(self):
-        pass
+        """Method to obtain name of jinja template related to specified platform."""
 
     @abstractmethod
     def post_installation(self):
-        pass
+        """Method called after the installation is done, this is the place where,
+        things like registration of apps domain and other is expected to happen."""
 
     def process_template(self):
-        with open(self.pull_secret_file) as ps:
-            self.pull_secret = ps.read()
+        """Method executes creation of install-config.yaml"""
+        with open(self.pull_secret_file) as ps_file:
+            self.pull_secret = ps_file.read()
         with open(self.ssh_key_file) as key_file:
             self.ssh_key = key_file.read()
         if self.certificate_bundle_file is not None:
@@ -59,28 +71,35 @@ class AbstractInstaller(ABC):
 
     @classmethod
     def get_environment(cls) -> Environment:
+        """Method loads jinja templates"""
         if cls.__env is None:
             cls.__env = Environment(loader=PackageLoader("osia.installer"))
         return cls.__env
 
 
-class InstallerProvider(object):
+class InstallerProvider:
+    """Class implements dynamic provider of registered platform specific
+    implementations of AbstractInstaller.
+    Class implements singleton design pattern."""
     __instance: "InstallerProvider" = None
 
     @classmethod
     def instance(cls) -> "InstallerProvider":
+        """Method to obtains singleton instance."""
         if cls.__instance is None:
             cls.__instance = cls()
         return cls.__instance
 
     @classmethod
     def register(cls, name, instance):
+        """Method to dynamically register implementation of AbstractInstaller"""
         cls.instance().add_installer(name, instance)
 
     def __init__(self):
         self.installers = {}
 
     def add_installer(self, name: str, instance: ClassVar):
+        """Insert concrete implementation of AbstractInstaller into the registry"""
         self.installers[name] = instance
 
     def __getitem__(self, name: str) -> ClassVar:

@@ -1,7 +1,9 @@
+"""Module responsible for download of openshift-install binary"""
 from shutil import copyfileobj
 from sys import platform
 from tempfile import NamedTemporaryFile
 from pathlib import Path
+from typing import Tuple, Optional
 
 import logging
 import re
@@ -22,12 +24,15 @@ EXTRACTION_RE = re.compile(r'.*Extracting tools for .*, may take up to a minute.
 def _current_platform():
     if platform == "linux":
         return platform
-    elif platform == "darwin":
+    if platform == "darwin":
         return "mac"
     raise Exception(f"Unrecognized platform {platform}")
 
 
-def get_url(directory):
+def get_url(directory: str) -> Tuple[Optional[str], Optional[str]]:
+    """Searches the http directory and returns both url to installer
+    and version.
+    """
     lst = requests.get(directory, allow_redirects=True)
     tree = BeautifulSoup(lst.content, 'html.parser')
     links = tree.find_all('a')
@@ -40,24 +45,28 @@ def get_url(directory):
     return installer, version
 
 
-def get_devel_url(version):
+def get_devel_url(version: str) -> str:
+    """
+    Searches developement sources and returns url to installer
+    """
     req = requests.get(BUILD_ROOT + version, allow_redirects=True)
-    sp = BeautifulSoup(req.content, 'html.parser')
+    ast = BeautifulSoup(req.content, 'html.parser')
     logging.info('Checking stage repository for installer')
-    while len(sp.find_all('p')) != 0 and EXTRACTION_RE.match(next(sp.find_all('p')[0].children)):
+    while len(ast.find_all('p')) != 0 and EXTRACTION_RE.match(next(ast.find_all('p')[0].children)):
         logging.debug('The installer was not extracted yet, waiting for 10s')
         time.sleep(10)
         req = requests.get(BUILD_ROOT + version, allow_redirects=True)
-        sp = BeautifulSoup(req.content, 'html.parser')
+        ast = BeautifulSoup(req.content, 'html.parser')
     logging.debug('Installer found on page, continuing')
     return get_url(req.url)
 
 
-def get_prod_url(version):
+def get_prod_url(version: str) -> str:
+    """Returns installer url from production sources"""
     return get_url(PROD_ROOT + version)
 
 
-def _get_storage_path(version, install_base):
+def _get_storage_path(version: str, install_base: str) -> str:
     path = Path(install_base)
     spec_path = path.joinpath(version)
     if not spec_path.exists():
@@ -65,7 +74,7 @@ def _get_storage_path(version, install_base):
     return spec_path.as_posix()
 
 
-def _extract_tar(buffer: NamedTemporaryFile, target: str, ):
+def _extract_tar(buffer: NamedTemporaryFile, target: str) -> Path:
     result = None
     with tarfile.open(buffer.name) as tar:
         inst_info = None
@@ -82,7 +91,8 @@ def _extract_tar(buffer: NamedTemporaryFile, target: str, ):
     return result
 
 
-def get_installer(tar_url: str, target: str):
+def get_installer(tar_url: str, target: str) -> str:
+    """Download and extract the installer into the target"""
     result = None
     logging.info('Starting the download of installer')
     req = requests.get(tar_url, stream=True, allow_redirects=True)
@@ -94,11 +104,12 @@ def get_installer(tar_url: str, target: str):
     result = _extract_tar(buf, target)
     buf.close()
 
-    logging.info(f'Installer extracted to %s', result.as_posix())
+    logging.info('Installer extracted to %s', result.as_posix())
     return result.as_posix()
 
 
-def download_installer(installer_version: str, dest_directory: str, devel: bool):
+def download_installer(installer_version: str, dest_directory: str, devel: bool) -> str:
+    """Starts search and extraction of installer"""
     logging.debug("Getting version %s, storing to directory %s and devel is %r",
                   installer_version, dest_directory, devel)
 

@@ -1,21 +1,23 @@
+"""Module implements command line interface for the installation of
+openshift"""
 import argparse
 import logging
-import coloredlogs
 from typing import List
+import coloredlogs
 
 from dynaconf import settings
 from .installer import install_cluster, delete_cluster, storage, download_installer
 
 
-def identity(in_attr: str) -> str:
+def _identity(in_attr: str) -> str:
     return in_attr
 
 
-def read_list(in_str: str) -> List[str]:
+def _read_list(in_str: str) -> List[str]:
     return in_str.split(',')
 
 
-arguments = {
+ARGUMENTS = {
     'common': {
         'cloud': {'help': 'Cloud provider to be used.', 'type': str,
                   'choices': ['openstack', 'aws']},
@@ -29,11 +31,11 @@ arguments = {
         'master_replicas': {'help': 'Number of replicas for master nodes', 'type': int},
         'pull_secret_file': {'help': 'File containing pull secret from `cloud.redhat.com`'},
         'ssh_key_file': {'help': 'File with ssh key used by installer'},
-        'list_of_regions': {'help': 'List of regions, comma separated values', 'proc': read_list},
+        'list_of_regions': {'help': 'List of regions, comma separated values', 'proc': _read_list},
         'osp_cloud': {'help': 'Name of openstack cloud identity in clouds.yaml'},
         'osp_base_flavor': {'help': 'Base flavor to be used in openstack'},
         'network_list': {'help': 'List of usable openstack networks, comma separated values',
-                         'proc': read_list},
+                         'proc': _read_list},
         'worker_flavor': {'help': 'flavor of worker node'},
         'worker_replicas': {'help': 'Number of replicas of worker nodes', 'type': int},
         'certificate_bundle_file': {'help': 'CA bundle file'},
@@ -46,12 +48,12 @@ arguments = {
     }
 }
 
-for a in [v for a in arguments for u, v in arguments[a].items()]:
+for a in [v for a in ARGUMENTS for u, v in ARGUMENTS[a].items()]:
     if not a.get('proc', None):
-        a['proc'] = identity
+        a['proc'] = _identity
 
 
-def resolve_installer(from_args):
+def _resolve_installer(from_args):
     if from_args.installer is None and from_args.installer_version is None:
         raise Exception('Either installer or installer-version must be passed')
     if from_args.installer:
@@ -62,10 +64,10 @@ def resolve_installer(from_args):
                               from_args.installer_devel)
 
 
-def merge_dictionaries(from_args):
+def _merge_dictionaries(from_args):
     result = {'cloud': None,
               'dns': None,
-              'installer': resolve_installer(from_args),
+              'installer': _resolve_installer(from_args),
               'cloud_name': None,
               'cluster_name': from_args.cluster_name,
               'os_image': None}
@@ -77,7 +79,7 @@ def merge_dictionaries(from_args):
                          'conf': defaults['DNS'][from_args.dns_provider]}
         result['dns']['conf'].update(
             {j[4:]: i['proc'](vars(from_args)[j])
-             for j, i in arguments['dns'].items()
+             for j, i in ARGUMENTS['dns'].items()
              if vars(from_args)[j] is not None}
         )
     if from_args.cloud is not None:
@@ -85,7 +87,7 @@ def merge_dictionaries(from_args):
         result['cloud_name'] = from_args.cloud
         result['cloud'] = defaults['CLOUD'][from_args.cloud]
         result['cloud'].update(
-            {j: i['proc'](vars(from_args)[j]) for j, i in arguments['install'].items()
+            {j: i['proc'](vars(from_args)[j]) for j, i in ARGUMENTS['install'].items()
              if vars(from_args)[j] is not None}
         )
         if result['dns'] is not None:
@@ -96,8 +98,8 @@ def merge_dictionaries(from_args):
     return result
 
 
-def exec_install_cluster(args):
-    conf = merge_dictionaries(args)
+def _exec_install_cluster(args):
+    conf = _merge_dictionaries(args)
     if not args.skip_git:
         storage.check_repository()
     logging.info('Starting the installer with cloud name %s', conf['cloud_name'])
@@ -113,8 +115,8 @@ def exec_install_cluster(args):
         storage.write_changes(conf['cluster_name'])
 
 
-def exec_delete_cluster(args):
-    conf = merge_dictionaries(args)
+def _exec_delete_cluster(args):
+    conf = _merge_dictionaries(args)
 
     if not args.skip_git:
         storage.check_repository()
@@ -125,14 +127,14 @@ def exec_delete_cluster(args):
         storage.delete_directory(conf['cluster_name'])
 
 
-def get_helper(parser: argparse.ArgumentParser):
-    def printer(conf):
-        print("Operation set, please specify either install or clean!")
+def _get_helper(parser: argparse.ArgumentParser):
+    def printer(unused_conf):
+        print("Operation not set, please specify either install or clean!")
         parser.print_help()
     return printer
 
 
-def create_commons():
+def _create_commons():
     commons = argparse.ArgumentParser(add_help=False)
     common_arguments = [
         [['--cluster-name'], dict(required=True, help='Name of the cluster')],
@@ -153,29 +155,33 @@ def create_commons():
     return commons
 
 
-def setup_parser():
-    commons = create_commons()
+def _setup_parser():
+    commons = _create_commons()
 
     parser = argparse.ArgumentParser("osia")
-    parser.set_defaults(func=get_helper(parser))
+    parser.set_defaults(func=_get_helper(parser))
     sub_parsers = parser.add_subparsers()
 
     install = sub_parsers.add_parser('install', help='Install new cluster', parents=[commons])
 
-    for arg, value in {k: v for a in arguments for k, v in arguments[a].items()}.items():
+    for arg, value in {k: v for a in ARGUMENTS for k, v in ARGUMENTS[a].items()}.items():
         install.add_argument(f"--{arg.replace('_', '-')}",
                              help=value.get('help', None),
                              type=value.get('type', None))
 
-    install.set_defaults(func=exec_install_cluster)
+    install.set_defaults(func=_exec_install_cluster)
 
     clean = sub_parsers.add_parser('clean', help='Remove cluster', parents=[commons])
-    clean.set_defaults(func=exec_delete_cluster)
+    clean.set_defaults(func=_exec_delete_cluster)
     return parser
 
 
 def main_cli():
-    parser = setup_parser()
+    """Function represents main entrypoint for the
+    osia intaller
+
+    It sets up the cli and starts the executor."""
+    parser = _setup_parser()
     args = parser.parse_args()
     if vars(args).get('verbose', False):
         coloredlogs.install(level='DEBUG')

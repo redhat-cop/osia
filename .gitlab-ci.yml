@@ -4,10 +4,9 @@ varaibles:
   PIPENV_VERBOSITY: "-1"
 
 before_script:
-- pip install pipenv
+- pip install -q pipenv
 
 styleCheck:
-  stage: style_check
   script: 
     - pipenv update --dev
     - pipenv run flake8 --max-line-length 100 osia

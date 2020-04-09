@@ -1,6 +1,6 @@
 # OSIA
 
-OpenShift infra automation
+OpenShift infra automation.
 
 ## Goal
 

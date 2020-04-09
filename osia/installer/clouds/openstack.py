@@ -5,7 +5,9 @@ from os import path
 
 import json
 
+from munch import Munch
 from openstack.connection import from_config, Connection
+from openstack.network.v2.floating_ip import FloatingIP
 from .base import AbstractInstaller
 
 
@@ -16,7 +18,7 @@ def _load_connection_openstack(conn_name: str, args=None) -> Connection:
     return connection
 
 
-def _update_json(json_file, fip):
+def _update_json(json_file: str, fip: str):
     res = None
     with open(json_file) as inp:
         res = json.load(inp)
@@ -51,7 +53,7 @@ def _find_fit_network(osp_connection: Connection, networks: List[str]) -> Option
     return (named_networks[result]['id'], result)
 
 
-def _find_cluster_ports(osp_connection: Connection, cluster_name: str):
+def _find_cluster_ports(osp_connection: Connection, cluster_name: str) -> Munch:
     port_list = [k for k in osp_connection.list_ports()
                  if k.name.startswith(cluster_name) and k.name.endswith('ingress-port')]
     port = next(iter(port_list), None)
@@ -64,8 +66,13 @@ def _attach_fip_to_port(osp_connection: Connection, fip_addr, ingress_port):
     osp_connection.network.add_ip_to_port(ingress_port, fip_addr)
 
 
-def _get_floating_ip(osp_connection: Connection, cloud: str, network_id: str, cluster_name: str):
-    fip = osp_connection.network.create_ip(floating_network_id=network_id)
+def _get_floating_ip(osp_connection: Connection,
+                     cloud: str,
+                     network_id: str,
+                     cluster_name: str,
+                     purpose: str) -> FloatingIP:
+    fip = osp_connection.network.create_ip(floating_network_id=network_id,
+                                           description=f"{cluster_name}-{purpose}")
     if fip is None:
         raise Exception(f"Allocation of Ip failed for network ${network_id}")
 
@@ -109,13 +116,15 @@ class OpenstackInstaller(AbstractInstaller):
         self.osp_fip = _get_floating_ip(self.connection,
                                         self.osp_cloud,
                                         self.network,
-                                        self.cluster_name).floating_ip_address
+                                        self.cluster_name,
+                                        "api").floating_ip_address
 
     def post_installation(self):
         ingress_port = _find_cluster_ports(self.connection, self.cluster_name)
         apps_fip = _get_floating_ip(self.connection,
                                     self.osp_cloud,
                                     self.network,
-                                    self.cluster_name)
+                                    self.cluster_name,
+                                    "ingress")
         _attach_fip_to_port(self.connection, self.apps_fip, ingress_port)
         self.apps_fip = apps_fip.floating_ip_address

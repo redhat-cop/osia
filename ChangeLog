@@ -1,3 +1,17 @@
 CHANGES
 =======
 
+## [0.1.7] - 2020-04-09
+
+### Fixes
+
+- Fixed race condition when cluster is being deleted while another process
+  finished creation.
+- Removed necessity to have zone and server set up for nsupdate.
+- Description to FIPs was added so it is clearly visible where it is assigned.
+- Fixed creation of installers directory.
+
+
+### Features
+
+* Download of developer preview sources enabled.

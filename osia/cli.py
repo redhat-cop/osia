@@ -169,7 +169,7 @@ def _setup_parser():
 
     install = sub_parsers.add_parser('install', help='Install new cluster', parents=[commons])
 
-    for arg, value in {k: v for a in ARGUMENTS for k, v in ARGUMENTS[a].items()}.items():
+    for arg, value in sorted({k: v for a in ARGUMENTS for k, v in ARGUMENTS[a].items()}.items()):
         install.add_argument(f"--{arg.replace('_', '-')}",
                              help=value.get('help', None),
                              type=value.get('type', None))

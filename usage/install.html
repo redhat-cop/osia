@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; osia 0.1.7 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Clean" href="clean.html" />
+    <link rel="prev" title="CLI Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> osia
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CLI Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clean.html">Clean</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../apiref.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">osia</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">CLI Reference</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/install.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">osia</span> <span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">name</span> <span class="n">CLUSTER_NAME</span> <span class="p">[</span><span class="o">--</span><span class="n">installer</span> <span class="n">INSTALLER</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">installer</span><span class="o">-</span><span class="n">version</span> <span class="n">INSTALLER_VERSION</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">installer</span><span class="o">-</span><span class="n">source</span> <span class="p">{</span><span class="n">prod</span><span class="p">,</span><span class="n">devel</span><span class="p">,</span><span class="n">prev</span><span class="p">}]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">installers</span><span class="o">-</span><span class="nb">dir</span> <span class="n">INSTALLERS_DIR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">git</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">base</span><span class="o">-</span><span class="n">domain</span> <span class="n">BASE_DOMAIN</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">certificate</span><span class="o">-</span><span class="n">bundle</span><span class="o">-</span><span class="n">file</span> <span class="n">CERTIFICATE_BUNDLE_FILE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">cloud</span> <span class="n">CLOUD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">file</span> <span class="n">DNS_KEY_FILE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">provider</span> <span class="n">DNS_PROVIDER</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">server</span> <span class="n">DNS_SERVER</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">ttl</span> <span class="n">DNS_TTL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">zone</span> <span class="n">DNS_ZONE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">images</span><span class="o">-</span><span class="nb">dir</span> <span class="n">IMAGES_DIR</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">regions</span> <span class="n">LIST_OF_REGIONS</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">master</span><span class="o">-</span><span class="n">flavor</span> <span class="n">MASTER_FLAVOR</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">master</span><span class="o">-</span><span class="n">replicas</span> <span class="n">MASTER_REPLICAS</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">network</span><span class="o">-</span><span class="nb">list</span> <span class="n">NETWORK_LIST</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">os</span><span class="o">-</span><span class="n">image</span> <span class="n">OS_IMAGE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">osp</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">flavor</span> <span class="n">OSP_BASE_FLAVOR</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">osp</span><span class="o">-</span><span class="n">cloud</span> <span class="n">OSP_CLOUD</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">pull</span><span class="o">-</span><span class="n">secret</span><span class="o">-</span><span class="n">file</span> <span class="n">PULL_SECRET_FILE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">clean</span> <span class="n">SKIP_CLEAN</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">ssh</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">file</span> <span class="n">SSH_KEY_FILE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">worker</span><span class="o">-</span><span class="n">flavor</span> <span class="n">WORKER_FLAVOR</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">worker</span><span class="o">-</span><span class="n">replicas</span> <span class="n">WORKER_REPLICAS</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--cluster-name</kbd></dt>
+<dd><p>Name of the cluster</p>
+</dd>
+<dt><kbd>--installer</kbd></dt>
+<dd><p>Executable binary of openshift install cli</p>
+</dd>
+<dt><kbd>--installer-version</kbd></dt>
+<dd><p>Version of downloader to be downloaded</p>
+<p>Default: “latest”</p>
+</dd>
+<dt><kbd>--installer-source</kbd></dt>
+<dd><p>Possible choices: prod, devel, prev</p>
+<p>Set the source to search for installer</p>
+<p>Default: “prod”</p>
+</dd>
+<dt><kbd>--installers-dir</kbd></dt>
+<dd><p>Folder where installers are stored</p>
+<p>Default: “installers”</p>
+</dd>
+<dt><kbd>--skip-git</kbd></dt>
+<dd><p>When set, the persistance will be skipped</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Increase verbosity level</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--base-domain</kbd></dt>
+<dd><p>Base domain for the cluster</p>
+</dd>
+<dt><kbd>--certificate-bundle-file</kbd></dt>
+<dd><p>CA bundle file</p>
+</dd>
+<dt><kbd>--cloud</kbd></dt>
+<dd><p>Cloud provider to be used.</p>
+</dd>
+<dt><kbd>--dns-key-file</kbd></dt>
+<dd><p>Keyfile used to access dns server via nsupdate</p>
+</dd>
+<dt><kbd>--dns-provider</kbd></dt>
+<dd><p>Provider of dns used with openstack cloud</p>
+</dd>
+<dt><kbd>--dns-server</kbd></dt>
+<dd><p>Address of server with running bind</p>
+</dd>
+<dt><kbd>--dns-ttl</kbd></dt>
+<dd><p>TTL of the records</p>
+</dd>
+<dt><kbd>--dns-zone</kbd></dt>
+<dd><p>Zone on server where the record will be stored</p>
+</dd>
+<dt><kbd>--images-dir</kbd></dt>
+<dd><p>Directory where images should be stored</p>
+</dd>
+<dt><kbd>--list-of-regions</kbd></dt>
+<dd><p>List of regions, comma separated values</p>
+</dd>
+<dt><kbd>--master-flavor</kbd></dt>
+<dd><p>Flavor used for master nodes</p>
+</dd>
+<dt><kbd>--master-replicas</kbd></dt>
+<dd><p>Number of replicas for master nodes</p>
+</dd>
+<dt><kbd>--network-list</kbd></dt>
+<dd><p>List of usable openstack networks, comma separated values</p>
+</dd>
+<dt><kbd>--os-image</kbd></dt>
+<dd><p>Image to override</p>
+</dd>
+<dt><kbd>--osp-base-flavor</kbd></dt>
+<dd><p>Base flavor to be used in openstack</p>
+</dd>
+<dt><kbd>--osp-cloud</kbd></dt>
+<dd><p>Name of openstack cloud identity in clouds.yaml</p>
+</dd>
+<dt><kbd>--pull-secret-file</kbd></dt>
+<dd><p>File containing pull secret from <cite>cloud.redhat.com</cite></p>
+</dd>
+<dt><kbd>--skip-clean</kbd></dt>
+<dd><p>Skip clean when installation fails</p>
+</dd>
+<dt><kbd>--ssh-key-file</kbd></dt>
+<dd><p>File with ssh key used by installer</p>
+</dd>
+<dt><kbd>--worker-flavor</kbd></dt>
+<dd><p>flavor of worker node</p>
+</dd>
+<dt><kbd>--worker-replicas</kbd></dt>
+<dd><p>Number of replicas of worker nodes</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="clean.html" class="btn btn-neutral float-right" title="Clean" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="CLI Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Miroslav Jaros
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

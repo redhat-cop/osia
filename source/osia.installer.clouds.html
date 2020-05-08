@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>osia.installer.clouds package &mdash; osia 0.1.7 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="osia.installer.dns package" href="osia.installer.dns.html" />
+    <link rel="prev" title="osia.installer package" href="osia.installer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> osia
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">CLI Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../apiref.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">osia</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="osia.html">osia package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="osia.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="osia.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="osia.html#module-osia.cli">osia.cli module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="osia.html#module-osia">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">osia</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../apiref.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="modules.html">osia</a> &raquo;</li>
+        
+          <li><a href="osia.html">osia package</a> &raquo;</li>
+        
+          <li><a href="osia.installer.html">osia.installer package</a> &raquo;</li>
+        
+      <li>osia.installer.clouds package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/osia.installer.clouds.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="osia-installer-clouds-package">
+<h1>osia.installer.clouds package<a class="headerlink" href="#osia-installer-clouds-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-osia.installer.clouds.aws">
+<span id="osia-installer-clouds-aws-module"></span><h2>osia.installer.clouds.aws module<a class="headerlink" href="#module-osia.installer.clouds.aws" title="Permalink to this headline">¶</a></h2>
+<p>Module implements configuration object for aws installation</p>
+<dl class="py class">
+<dt id="osia.installer.clouds.aws.AWSInstaller">
+<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.aws.</code><code class="sig-name descname">AWSInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster_region</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">list_of_regions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.aws.AWSInstaller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osia.installer.clouds.base.AbstractInstaller" title="osia.installer.clouds.base.AbstractInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">osia.installer.clouds.base.AbstractInstaller</span></code></a></p>
+<p>Object containing all configuration related
+to aws installation</p>
+<dl class="py method">
+<dt id="osia.installer.clouds.aws.AWSInstaller.acquire_resources">
+<code class="sig-name descname">acquire_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.aws.AWSInstaller.acquire_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method which is called before the install-config can be generated.
+The method should be used to get all necessary dependencies to fill
+in details in install-config</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.aws.AWSInstaller.get_template_name">
+<code class="sig-name descname">get_template_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.aws.AWSInstaller.get_template_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to obtain name of jinja template related to specified platform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.aws.AWSInstaller.post_installation">
+<code class="sig-name descname">post_installation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.aws.AWSInstaller.post_installation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method called after the installation is done, this is the place where,
+things like registration of apps domain and other is expected to happen.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.clouds.aws.get_free_region">
+<code class="sig-prename descclassname">osia.installer.clouds.aws.</code><code class="sig-name descname">get_free_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">order_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>str<span class="p">]</span><a class="headerlink" href="#osia.installer.clouds.aws.get_free_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds first free region in provided list,
+if provided list is empty, it searches all regions</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-osia.installer.clouds.base">
+<span id="osia-installer-clouds-base-module"></span><h2>osia.installer.clouds.base module<a class="headerlink" href="#module-osia.installer.clouds.base" title="Permalink to this headline">¶</a></h2>
+<p>Module implements common base for install-config
+creation.
+It also implements logic to obtain correct specification
+for specified installation platform</p>
+<dl class="py class">
+<dt id="osia.installer.clouds.base.AbstractInstaller">
+<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.base.</code><code class="sig-name descname">AbstractInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">base_domain</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">master_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">master_replicas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pull_secret_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">worker_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">worker_replicas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">certificate_bundle_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster_directory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skip_clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">installer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">unused_kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base object for configuration of install-config</p>
+<dl class="py method">
+<dt id="osia.installer.clouds.base.AbstractInstaller.acquire_resources">
+<em class="property">abstract </em><code class="sig-name descname">acquire_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller.acquire_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method which is called before the install-config can be generated.
+The method should be used to get all necessary dependencies to fill
+in details in install-config</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.AbstractInstaller.check_clean">
+<code class="sig-name descname">check_clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller.check_clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method returns if installation is configured to clean resources
+on failure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.AbstractInstaller.get_environment">
+<em class="property">classmethod </em><code class="sig-name descname">get_environment</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; jinja2.environment.Environment<a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller.get_environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method loads jinja templates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.AbstractInstaller.get_template_name">
+<em class="property">abstract </em><code class="sig-name descname">get_template_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller.get_template_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to obtain name of jinja template related to specified platform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.AbstractInstaller.post_installation">
+<em class="property">abstract </em><code class="sig-name descname">post_installation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller.post_installation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method called after the installation is done, this is the place where,
+things like registration of apps domain and other is expected to happen.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.AbstractInstaller.process_template">
+<code class="sig-name descname">process_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.AbstractInstaller.process_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method executes creation of install-config.yaml</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="osia.installer.clouds.base.InstallerProvider">
+<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.base.</code><code class="sig-name descname">InstallerProvider</code><a class="headerlink" href="#osia.installer.clouds.base.InstallerProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class implements dynamic provider of registered platform specific
+implementations of AbstractInstaller.
+Class implements singleton design pattern.</p>
+<dl class="py method">
+<dt id="osia.installer.clouds.base.InstallerProvider.add_installer">
+<code class="sig-name descname">add_installer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">ClassVar</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.InstallerProvider.add_installer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert concrete implementation of AbstractInstaller into the registry</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.InstallerProvider.instance">
+<em class="property">classmethod </em><code class="sig-name descname">instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#osia.installer.clouds.base.InstallerProvider" title="osia.installer.clouds.base.InstallerProvider">osia.installer.clouds.base.InstallerProvider</a><a class="headerlink" href="#osia.installer.clouds.base.InstallerProvider.instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to obtains singleton instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.base.InstallerProvider.register">
+<em class="property">classmethod </em><code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.base.InstallerProvider.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to dynamically register implementation of AbstractInstaller</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-osia.installer.clouds.openstack">
+<span id="osia-installer-clouds-openstack-module"></span><h2>osia.installer.clouds.openstack module<a class="headerlink" href="#module-osia.installer.clouds.openstack" title="Permalink to this headline">¶</a></h2>
+<p>Module implements support for Openstack installation</p>
+<dl class="py class">
+<dt id="osia.installer.clouds.openstack.OpenstackInstaller">
+<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">OpenstackInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_cloud</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_base_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osia.installer.clouds.base.AbstractInstaller" title="osia.installer.clouds.base.AbstractInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">osia.installer.clouds.base.AbstractInstaller</span></code></a></p>
+<p>Class containing configuration related to openstack</p>
+<dl class="py method">
+<dt id="osia.installer.clouds.openstack.OpenstackInstaller.acquire_resources">
+<code class="sig-name descname">acquire_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller.acquire_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method which is called before the install-config can be generated.
+The method should be used to get all necessary dependencies to fill
+in details in install-config</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.openstack.OpenstackInstaller.get_template_name">
+<code class="sig-name descname">get_template_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller.get_template_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to obtain name of jinja template related to specified platform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osia.installer.clouds.openstack.OpenstackInstaller.post_installation">
+<code class="sig-name descname">post_installation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller.post_installation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method called after the installation is done, this is the place where,
+things like registration of apps domain and other is expected to happen.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.clouds.openstack.delete_fips">
+<code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">delete_fips</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fips_file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.delete_fips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes floating ips stored in configuration file</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-osia.installer.clouds">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-osia.installer.clouds" title="Permalink to this headline">¶</a></h2>
+<p>Module implements configuration objects for install-config creation</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="osia.installer.dns.html" class="btn btn-neutral float-right" title="osia.installer.dns package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="osia.installer.html" class="btn btn-neutral float-left" title="osia.installer package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Miroslav Jaros
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

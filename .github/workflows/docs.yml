@@ -1,0 +1,40 @@
+name: publish-docs
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: webfactory/ssh-agent
+      uses: webfactory/ssh-agent@v0.2.0
+      with:
+        ssh-private-key: ${{ secrets.GH_TOKEN }}
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies and create virtualenv
+      run: |
+        pip install pipenv
+        pipenv update --dev
+    - name: Sphinx Build
+      run: |
+        cd docs/
+        pipenv run make html
+        
+    - name: Publish documentation
+      run: |
+        git clone git@github.com:redhat-cop/osia.git --branch gh-pages --single-branch gh-pages
+        cp -r docs/_build/html/* gh-pages/
+        cd gh-pages
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Update documentation" -a || true
+    - name: Push changes
+      run: |
+        cd gh-pages && git push origin gh-pages

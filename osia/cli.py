@@ -58,6 +58,10 @@ ARGUMENTS = {
                        'default': 'images'},
         'skip_clean': {'help': 'Skip clean when installation fails', 'action': 'store_true'},
     },
+    'deprecated': {
+        'psi_cloud': {'help': 'DEPRECATED see osp_cloud'},
+        'psi_base_flavor': {'help': 'DEPRECATED see osp_base_flavor'},
+    },
     'dns': {
         'dns_ttl': {'help': 'TTL of the records', 'type': int},
         'dns_key_file': {'help': 'Keyfile used to access dns server via nsupdate'},
@@ -207,5 +211,6 @@ def main_cli():
         coloredlogs.install(level='DEBUG')
     else:
         coloredlogs.install(level='INFO')
+    logging.captureWarnings(True)
 
     args.func(args)

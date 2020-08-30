@@ -19,6 +19,7 @@ from typing import List, Optional
 from os import path
 
 import json
+import warnings
 
 from munch import Munch
 from openstack.connection import from_config, Connection
@@ -110,8 +111,19 @@ class OpenstackInstaller(AbstractInstaller):
                  args=None,
                  **kwargs):
         super().__init__(**kwargs)
-        self.osp_cloud = osp_cloud
-        self.osp_base_flavor = osp_base_flavor
+        if 'psi_base_flavor' in kwargs:
+            warnings.warn("[Deprecation warning]: option psi_base_flavor was replaced by option "
+                          "osp_base_flavor this option will be removed in next releases.")
+            self.osp_base_flavor = kwargs['psi_base_flavor']
+        if 'psi_cloud' in kwargs:
+            warnings.warn("[Deprecation warning]: option psi_cloud was replaced by option osp_cloud"
+                          "this option will be removed in next releases.")
+            self.osp_cloud = kwargs['psi_cloud']
+
+        if osp_cloud is not None:
+            self.osp_cloud = osp_cloud
+        if osp_base_flavor is not None:
+            self.osp_base_flavor = osp_base_flavor
         self.network_list = network_list
         self.args = args
         self.osp_fip = None

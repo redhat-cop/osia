@@ -39,7 +39,10 @@ class AWSInstaller(AbstractInstaller):
         region = get_free_region(self.list_of_regions)
 
         if region is None:
+            logging.error("No free region amongst selected ones: %s",
+                          ', '.join(self.list_of_regions))
             raise Exception("No free region found")
+        logging.info("Selected region %s", region)
         self.cluster_region = region
 
     def post_installation(self):

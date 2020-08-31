@@ -141,5 +141,5 @@ class OpenstackInstaller(AbstractInstaller):
                                     self.network,
                                     self.cluster_name,
                                     "ingress")
-        _attach_fip_to_port(self.connection, self.apps_fip, ingress_port)
+        _attach_fip_to_port(self.connection, apps_fip, ingress_port)
         self.apps_fip = apps_fip.floating_ip_address

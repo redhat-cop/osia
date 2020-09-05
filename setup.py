@@ -34,7 +34,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="osia",
-    version="0.2.0",
+    version="0.2.0-alpha1",
     description="OpenShift infra automation",
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -38,7 +38,7 @@ setup(
     description="OpenShift infra automation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="fixme",
+    url="https://redhat-cop.github.io/osia/",
     author="Miroslav Jaros",
     author_email="mirek@mijaros.cz",
     classifiers=[

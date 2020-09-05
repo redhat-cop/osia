@@ -301,9 +301,16 @@ Class implements singleton design pattern.</p>
 <div class="section" id="module-osia.installer.clouds.openstack">
 <span id="osia-installer-clouds-openstack-module"></span><h2>osia.installer.clouds.openstack module<a class="headerlink" href="#module-osia.installer.clouds.openstack" title="Permalink to this headline">¶</a></h2>
 <p>Module implements support for Openstack installation</p>
+<dl class="py exception">
+<dt id="osia.installer.clouds.openstack.ImageException">
+<em class="property">exception </em><code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">ImageException</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.ImageException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Image exception encapsulates Exception happening while image resolution</p>
+</dd></dl>
+
 <dl class="py class">
 <dt id="osia.installer.clouds.openstack.OpenstackInstaller">
-<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">OpenstackInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_cloud</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_base_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">OpenstackInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_cloud</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_base_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">os_image</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">images_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_image_download</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#osia.installer.clouds.base.AbstractInstaller" title="osia.installer.clouds.base.AbstractInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">osia.installer.clouds.base.AbstractInstaller</span></code></a></p>
 <p>Class containing configuration related to openstack</p>
 <dl class="py method">
@@ -330,9 +337,32 @@ things like registration of apps domain and other is expected to happen.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="osia.installer.clouds.openstack.add_cluster">
+<code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">add_cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_connection</span><span class="p">:</span> <span class="n">openstack.connection.Connection</span></em>, <em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">openstack.image.v2.image.Image</span></em>, <em class="sig-param"><span class="n">cluster_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.add_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function adds cluster name to image metadata in order to prevent
+image deletion</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="osia.installer.clouds.openstack.delete_fips">
 <code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">delete_fips</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fips_file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.delete_fips" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes floating ips stored in configuration file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.clouds.openstack.delete_image">
+<code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">delete_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fips_file</span></em>, <em class="sig-param"><span class="n">cluster_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.delete_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function checkes the uploaded image into openstack
+and removes from its metadata information about associated
+cluster.
+If last associated cluster was removed, the image is deleted</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.clouds.openstack.resolve_image">
+<code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">resolve_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_connection</span><span class="p">:</span> <span class="n">openstack.connection.Connection</span></em>, <em class="sig-param"><span class="n">cloud</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cluster_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">images_dir</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">installer</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">error</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Exception<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.resolve_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function searches for image in openstack and creates it
+if it doesn’t exist</p>
 </dd></dl>
 
 </div>

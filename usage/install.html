@@ -169,20 +169,20 @@
                     <span class="p">[</span><span class="o">--</span><span class="n">installers</span><span class="o">-</span><span class="nb">dir</span> <span class="n">INSTALLERS_DIR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">git</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">base</span><span class="o">-</span><span class="n">domain</span> <span class="n">BASE_DOMAIN</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">certificate</span><span class="o">-</span><span class="n">bundle</span><span class="o">-</span><span class="n">file</span> <span class="n">CERTIFICATE_BUNDLE_FILE</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">cloud</span> <span class="n">CLOUD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">file</span> <span class="n">DNS_KEY_FILE</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">provider</span> <span class="n">DNS_PROVIDER</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">server</span> <span class="n">DNS_SERVER</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">ttl</span> <span class="n">DNS_TTL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">zone</span> <span class="n">DNS_ZONE</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">images</span><span class="o">-</span><span class="nb">dir</span> <span class="n">IMAGES_DIR</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">cloud</span> <span class="p">{</span><span class="n">openstack</span><span class="p">,</span><span class="n">aws</span><span class="p">}]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">file</span> <span class="n">DNS_KEY_FILE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">provider</span> <span class="p">{</span><span class="n">nsupdate</span><span class="p">,</span><span class="n">route53</span><span class="p">}]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">server</span> <span class="n">DNS_SERVER</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">ttl</span> <span class="n">DNS_TTL</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">dns</span><span class="o">-</span><span class="n">zone</span> <span class="n">DNS_ZONE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">images</span><span class="o">-</span><span class="nb">dir</span> <span class="n">IMAGES_DIR</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">regions</span> <span class="n">LIST_OF_REGIONS</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">master</span><span class="o">-</span><span class="n">flavor</span> <span class="n">MASTER_FLAVOR</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">master</span><span class="o">-</span><span class="n">replicas</span> <span class="n">MASTER_REPLICAS</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">network</span><span class="o">-</span><span class="nb">list</span> <span class="n">NETWORK_LIST</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">os</span><span class="o">-</span><span class="n">image</span> <span class="n">OS_IMAGE</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">osp</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">flavor</span> <span class="n">OSP_BASE_FLAVOR</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">osp</span><span class="o">-</span><span class="n">cloud</span> <span class="n">OSP_CLOUD</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">osp</span><span class="o">-</span><span class="n">cloud</span> <span class="n">OSP_CLOUD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">osp</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">download</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">psi</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">flavor</span> <span class="n">PSI_BASE_FLAVOR</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">psi</span><span class="o">-</span><span class="n">cloud</span> <span class="n">PSI_CLOUD</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">pull</span><span class="o">-</span><span class="n">secret</span><span class="o">-</span><span class="n">file</span> <span class="n">PULL_SECRET_FILE</span><span class="p">]</span>
-                    <span class="p">[</span><span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">clean</span> <span class="n">SKIP_CLEAN</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">ssh</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">file</span> <span class="n">SSH_KEY_FILE</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">pull</span><span class="o">-</span><span class="n">secret</span><span class="o">-</span><span class="n">file</span> <span class="n">PULL_SECRET_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">clean</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">--</span><span class="n">ssh</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">file</span> <span class="n">SSH_KEY_FILE</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">worker</span><span class="o">-</span><span class="n">flavor</span> <span class="n">WORKER_FLAVOR</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">worker</span><span class="o">-</span><span class="n">replicas</span> <span class="n">WORKER_REPLICAS</span><span class="p">]</span>
 </pre></div>
@@ -224,13 +224,15 @@
 <dd><p>CA bundle file</p>
 </dd>
 <dt><kbd>--cloud</kbd></dt>
-<dd><p>Cloud provider to be used.</p>
+<dd><p>Possible choices: openstack, aws</p>
+<p>Cloud provider to be used.</p>
 </dd>
 <dt><kbd>--dns-key-file</kbd></dt>
 <dd><p>Keyfile used to access dns server via nsupdate</p>
 </dd>
 <dt><kbd>--dns-provider</kbd></dt>
-<dd><p>Provider of dns used with openstack cloud</p>
+<dd><p>Possible choices: nsupdate, route53</p>
+<p>Provider of dns used with openstack cloud</p>
 </dd>
 <dt><kbd>--dns-server</kbd></dt>
 <dd><p>Address of server with running bind</p>
@@ -243,6 +245,7 @@
 </dd>
 <dt><kbd>--images-dir</kbd></dt>
 <dd><p>Directory where images should be stored</p>
+<p>Default: “images”</p>
 </dd>
 <dt><kbd>--list-of-regions</kbd></dt>
 <dd><p>List of regions, comma separated values</p>
@@ -265,6 +268,10 @@
 <dt><kbd>--osp-cloud</kbd></dt>
 <dd><p>Name of openstack cloud identity in clouds.yaml</p>
 </dd>
+<dt><kbd>--osp-image-download</kbd></dt>
+<dd><p>Enable image download by osia instead of openshift-install</p>
+<p>Default: False</p>
+</dd>
 <dt><kbd>--psi-base-flavor</kbd></dt>
 <dd><p>DEPRECATED see osp_base_flavor</p>
 </dd>
@@ -276,6 +283,7 @@
 </dd>
 <dt><kbd>--skip-clean</kbd></dt>
 <dd><p>Skip clean when installation fails</p>
+<p>Default: False</p>
 </dd>
 <dt><kbd>--ssh-key-file</kbd></dt>
 <dd><p>File with ssh key used by installer</p>

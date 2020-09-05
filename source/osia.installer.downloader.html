@@ -179,6 +179,29 @@
 </div>
 <div class="section" id="module-osia.installer.downloader.image">
 <span id="osia-installer-downloader-image-module"></span><h2>osia.installer.downloader.image module<a class="headerlink" href="#module-osia.installer.downloader.image" title="Permalink to this headline">¶</a></h2>
+<p>Module implements logic for rhcos image download</p>
+<dl class="py function">
+<dt id="osia.installer.downloader.image.download_image">
+<code class="sig-prename descclassname">osia.installer.downloader.image.</code><code class="sig-name descname">download_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_url</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">image_file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.downloader.image.download_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main entrypoint for image download, function
+extracts url to rhcos image, downloads and extracts it
+to specified target</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.downloader.image.get_commit">
+<code class="sig-prename descclassname">osia.installer.downloader.image.</code><code class="sig-name descname">get_commit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">installer</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#osia.installer.downloader.image.get_commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function extracts source commit from installer,
+in order to find associated rhcos image</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.downloader.image.get_url">
+<code class="sig-prename descclassname">osia.installer.downloader.image.</code><code class="sig-name descname">get_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">installer</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><a class="headerlink" href="#osia.installer.downloader.image.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function builds url to rhcos image and version of
+rhcos iamge.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-osia.installer.downloader.install">
 <span id="osia-installer-downloader-install-module"></span><h2>osia.installer.downloader.install module<a class="headerlink" href="#module-osia.installer.downloader.install" title="Permalink to this headline">¶</a></h2>
@@ -197,7 +220,7 @@
 
 <dl class="py function">
 <dt id="osia.installer.downloader.install.get_installer">
-<code class="sig-prename descclassname">osia.installer.downloader.install.</code><code class="sig-name descname">get_installer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tar_url</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#osia.installer.downloader.install.get_installer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">osia.installer.downloader.install.</code><code class="sig-name descname">get_installer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tar_url</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.downloader.install.get_installer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download and extract the installer into the target</p>
 </dd></dl>
 
@@ -226,9 +249,24 @@ and version.</p>
 <p>Module implements download logic of resources
 required by installer</p>
 <dl class="py function">
+<dt id="osia.installer.downloader.download_image">
+<code class="sig-prename descclassname">osia.installer.downloader.</code><code class="sig-name descname">download_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_url</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">image_file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.downloader.download_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main entrypoint for image download, function
+extracts url to rhcos image, downloads and extracts it
+to specified target</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="osia.installer.downloader.download_installer">
 <code class="sig-prename descclassname">osia.installer.downloader.</code><code class="sig-name descname">download_installer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">installer_version</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">dest_directory</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">source</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#osia.installer.downloader.download_installer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts search and extraction of installer</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="osia.installer.downloader.get_url">
+<code class="sig-prename descclassname">osia.installer.downloader.</code><code class="sig-name descname">get_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">installer</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><a class="headerlink" href="#osia.installer.downloader.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function builds url to rhcos image and version of
+rhcos iamge.</p>
 </dd></dl>
 
 </div>

@@ -4,16 +4,30 @@ OpenShift infra automation.
 
 ## Goal
 
-The tool aims to create unified installer 
+The tool aims to unified installer of OpenShift to various clouds which is
+easy to automate and use within CI.
+
+To see necessary steps for OpenShift installation please see [OpenShift documentation](https://docs.openshift.com).
+
+To see full documentation of `osia` please follow to [Official documentation](https://redhat-cop.github.io/osia).
+
+## Installation
+
+To get started with osia, just install available package from [pypi](pypi.org):
+
+```bash
+$ pip install osia
+```
+
 
 __Main features__
 
-* Find empty region in aws to install opneshift on
-* Find feasible network in PSI and allocate FIPs before installation happens
+* Find empty region in aws to install opneshift on.
+* Find feasible network in OpenStack and allocate FIPs before installation happens.
 * Generate `install-config.yaml` from predefined defaults.
-* Store generated files for deletion to git repository and push changes right after the cluster is installed
-* Manage DNS entries based on the installation properties and results
-* Clean everything once the cluster is not needed
+* Store generated files for deletion to git repository and push changes right after the cluster is installed.
+* Manage DNS entries based on the installation properties and results.
+* Clean everything once the cluster is not needed.
 
 
 

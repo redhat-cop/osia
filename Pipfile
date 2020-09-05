@@ -2,7 +2,7 @@
 openstacksdk = "*"
 boto3 = "*"
 jinja2 = "*"
-dynaconf = "*"
+dynaconf = {extras = ["yaml"], version = "*"}
 gitpython = "*"
 beautifulsoup4 = "*"
 coloredlogs = "*"
@@ -19,3 +19,4 @@ sphinx = "*"
 recommonmark = "*"
 sphinx-rtd-theme = "*"
 sphinx-argparse = "*"
+twine = "*"

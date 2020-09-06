@@ -2,6 +2,8 @@ name: publish-docs
 on:
   push:
     branches: [ master ]
+    tags: [ v* ]
+
 
 jobs:
   build:
@@ -23,13 +25,11 @@ jobs:
         pipenv update --dev
     - name: Sphinx Build
       run: |
-        cd docs/
-        pipenv run make html
-        
+        pipenv run sphinx-versioning build -t docs html
     - name: Publish documentation
       run: |
         git clone git@github.com:redhat-cop/osia.git --branch gh-pages --single-branch gh-pages
-        cp -r docs/_build/html/* gh-pages/
+        cp -r html/* gh-pages/
         cd gh-pages
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"

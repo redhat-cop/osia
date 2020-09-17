@@ -288,3 +288,9 @@ class OpenstackInstaller(AbstractInstaller):
                                     "ingress")
         _attach_fip_to_port(self.connection, apps_fip, ingress_port)
         self.apps_fip = apps_fip.floating_ip_address
+
+    def get_api_ip(self) -> Optional[str]:
+        return self.osp_fip
+
+    def get_apps_ip(self):
+        return self.apps_fip

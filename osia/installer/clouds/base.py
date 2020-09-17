@@ -18,7 +18,7 @@ creation.
 It also implements logic to obtain correct specification
 for specified installation platform"""
 from abc import abstractmethod, ABC
-from typing import ClassVar
+from typing import ClassVar, Optional
 from jinja2 import Environment, PackageLoader
 
 
@@ -75,6 +75,16 @@ class AbstractInstaller(ABC):
     def post_installation(self):
         """Method called after the installation is done, this is the place where,
         things like registration of apps domain and other is expected to happen."""
+
+    @abstractmethod
+    def get_api_ip(self) -> Optional[str]:
+        """Returns api ip address if dns is supported, None otherwise.
+        """
+
+    @abstractmethod
+    def get_apps_ip(self):
+        """Returns apps ip if dns is supported, None otherwise
+        """
 
     def check_clean(self):
         """Method returns if installation is configured to clean resources

@@ -17,6 +17,7 @@
 import logging
 from subprocess import Popen, PIPE
 from osia.installer.dns.base import DNSUtil
+from osia.installer.clouds.base import AbstractInstaller
 
 
 class NSUpdate(DNSUtil):
@@ -30,6 +31,7 @@ class NSUpdate(DNSUtil):
     def _exec_nsupdate(self, string: str):
         with Popen(["nsupdate", "-k", self.key_file], stdin=PIPE, universal_newlines=True) as nsu:
             nsu.communicate(string)
+            self.modified = True
 
     def provider_name(self):
         return 'nsupdate'
@@ -45,21 +47,27 @@ class NSUpdate(DNSUtil):
     def _get_suffix(self):
         return f"{self.cluster_name}.{self.base_domain}"
 
-    def add_api_domain(self, ip_addr: str):
+    def add_api_domain(self, instance: AbstractInstaller):
+        if instance.get_api_ip() is None:
+            logging.debug("Not applying dns settings since no ip address is associated")
+            return
         logging.info("Adding api domain api.%s for floating ip addr %s",
-                     self._get_suffix(), ip_addr)
+                     self._get_suffix(), instance.get_api_ip())
         nsupdate_string = f"""{self._get_start()}
-update add api.{self._get_suffix()} {self.ttl} A {ip_addr}
+update add api.{self._get_suffix()} {self.ttl} A {instance.get_api_ip()}
 send
 """
         self._exec_nsupdate(nsupdate_string)
 
-    def add_apps_domain(self, ip_addr: str):
+    def add_apps_domain(self, instance: AbstractInstaller):
+        if instance.get_apps_ip() is None:
+            logging.debug("Not applying dns settings since no ip address is associated")
+            return
         logging.info("Adding apps domain *.apps.%s for floating ip addr %s",
-                     self._get_suffix(), ip_addr)
+                     self._get_suffix(), instance.get_apps_ip())
         nsupdate_string = f"""{self._get_start()}
-update add apps.{self._get_suffix()} {self.ttl} A {ip_addr}
-update add \\*.apps.{self._get_suffix()} {self.ttl} A {ip_addr}
+update add apps.{self._get_suffix()} {self.ttl} A {instance.get_apps_ip()}
+update add \\*.apps.{self._get_suffix()} {self.ttl} A {instance.get_apps_ip()}
 send
 """
         self._exec_nsupdate(nsupdate_string)

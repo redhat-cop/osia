@@ -45,6 +45,12 @@ class AWSInstaller(AbstractInstaller):
         logging.info("Selected region %s", region)
         self.cluster_region = region
 
+    def get_api_ip(self) -> Optional[str]:
+        return None
+
+    def get_apps_ip(self):
+        return None
+
     def post_installation(self):
         pass
 

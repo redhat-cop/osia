@@ -15,10 +15,12 @@
 # limitations under the License.
 """Module contains basics and common functionality to set up DNS."""
 from abc import ABC, abstractmethod
-from typing import ClassVar, Optional
+import json
 from os import path
 from pathlib import Path
-import json
+from typing import ClassVar, Optional
+
+from osia.installer.clouds.base import AbstractInstaller
 
 
 class DNSProvider:
@@ -68,13 +70,14 @@ class DNSUtil(ABC):
         self.cluster_name = cluster_name
         self.base_domain = base_domain
         self.ttl = ttl
+        self.modified = False
 
     @abstractmethod
-    def add_api_domain(self, ip_addr: str):
+    def add_api_domain(self, instance: AbstractInstaller):
         """Method registers api domain in selected provider"""
 
     @abstractmethod
-    def add_apps_domain(self, ip_addr: str):
+    def add_apps_domain(self, instance: AbstractInstaller):
         """Method registers apps domain in selected provider"""
 
     @abstractmethod
@@ -87,6 +90,8 @@ class DNSUtil(ABC):
 
     def marshall(self, out_dir: str):
         """Method stores current configuration on DNS provider to $provider_name.json"""
+        if not self.modified:
+            return
         with open(f"{out_dir}/{self.provider_name()}.json", "w") as output:
             json.dump(self, output, default=lambda o: o.__dict__)
 

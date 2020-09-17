@@ -15,6 +15,7 @@
 # limitations under the License.
 """Module implements dns methods to work with route53 provider"""
 import boto3
+from osia.installer.clouds.base import AbstractInstaller
 from osia.installer.dns.base import DNSUtil
 
 
@@ -61,14 +62,15 @@ class Route53Provider(DNSUtil):
         _get_connection().change_resource_record_sets(
             HostedZoneId=self._get_hosted_zone(),
             ChangeBatch=change_batch)
+        self.modified = True
 
-    def add_api_domain(self, ip_addr: str):
-        self.api_ip = ip_addr
-        self._execute_command('api', 'CREATE', ip_addr)
+    def add_api_domain(self, instance: AbstractInstaller):
+        self.api_ip = instance.get_api_ip()
+        self._execute_command('api', 'CREATE', self.api_ip)
 
-    def add_apps_domain(self, ip_addr: str):
-        self.apps_ip = ip_addr
-        self._execute_command('*.apps', 'CREATE', ip_addr)
+    def add_apps_domain(self, instance: AbstractInstaller):
+        self.apps_ip = instance.get_apps_ip()
+        self._execute_command('*.apps', 'CREATE', self.apps_ip)
 
     def delete_domains(self):
         if self.api_ip is not None:

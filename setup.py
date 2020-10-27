@@ -66,7 +66,7 @@ setup(
         "cffi==1.14.2",
         "chardet==3.0.4",
         "coloredlogs==14.0",
-        "cryptography==3.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
+        "cryptography==3.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "decorator==4.4.2",
         "docutils==0.15.2; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "dogpile.cache==1.0.2; python_version >= '3.6'",

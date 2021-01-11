@@ -315,7 +315,7 @@ Class implements singleton design pattern.</p>
 
 <dl class="py class">
 <dt id="osia.installer.clouds.openstack.OpenstackInstaller">
-<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">OpenstackInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_cloud</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_base_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">os_image</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">images_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_image_download</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">OpenstackInstaller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_cloud</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_base_flavor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">os_image</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">images_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">osp_image_download</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">osp_image_unique</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.OpenstackInstaller" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#osia.installer.clouds.base.AbstractInstaller" title="osia.installer.clouds.base.AbstractInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">osia.installer.clouds.base.AbstractInstaller</span></code></a></p>
 <p>Class containing configuration related to openstack</p>
 <dl class="py method">
@@ -370,6 +370,12 @@ If last associated cluster was removed, the image is deleted</p>
 if it doesn’t exist</p>
 </dd></dl>
 
+<dl class="py function">
+<dt id="osia.installer.clouds.openstack.upload_uniq_image">
+<code class="sig-prename descclassname">osia.installer.clouds.openstack.</code><code class="sig-name descname">upload_uniq_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">osp_connection</span><span class="p">:</span> <span class="n">openstack.connection.Connection</span></em>, <em class="sig-param"><span class="n">cloud</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cluster_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">images_dir</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">installer</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#osia.installer.clouds.openstack.upload_uniq_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function uploads unique image to the cluster, instead of making shared one</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-osia.installer.clouds">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-osia.installer.clouds" title="Permalink to this headline">¶</a></h2>
@@ -421,7 +427,9 @@ if it doesn’t exist</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../v0.2.0/source/osia.installer.clouds.html">v0.2.0</a></dd>
             <dd><a href="../../v0.2.0-alpha1/source/osia.installer.clouds.html">v0.2.0-alpha1</a></dd>
+            <dd><a href="../../v0.2.0-alpha2/source/osia.installer.clouds.html">v0.2.0-alpha2</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>

@@ -145,6 +145,36 @@ def add_cluster(osp_connection: Connection, image: Image, cluster_name: str):
     osp_connection.image.update_image(image, osia_clusters=','.join(clusters))
 
 
+def upload_uniq_image(osp_connection: Connection,
+                      cloud: str,
+                      cluster_name: str,
+                      images_dir: str,
+                      installer: str):
+    """Function uploads unique image to the cluster, instead of making shared one"""
+    inst_url, version = get_url(installer)
+    image_name = f"osia-{cluster_name}-{version}"
+    image_path = Path(images_dir).joinpath(f"rhcos-{version}.qcow2")
+    image_file = None
+    if image_path.exists():
+        logging.info("Found image at %s", image_path.name)
+        image_file = image_path.as_posix()
+    else:
+        logging.info("Starting download of image %s", inst_url)
+        image_file = download_image(inst_url, image_path.as_posix())
+
+    logging.info("Starting upload of image into openstack")
+    osp_connection.create_image(image_name, filename=image_file,
+                                container_format="bare", disk_format="qcow2", wait=True,
+                                osia_clusters=cluster_name, visibility='private')
+    logging.info("Upload finished")
+    image = osp_connection.image.find_image(image_name)
+    logging.info("Image uploaded as %s", image.name)
+    with open(Path(cluster_name).joinpath("fips.json"), "w") as fips:
+        obj = {'cloud': cloud, 'fips': list(), 'image': image_name}
+        json.dump(obj, fips)
+    return image.name
+
+
 # pylint: disable=too-many-arguments
 def resolve_image(osp_connection: Connection,
                   cloud: str,
@@ -200,6 +230,7 @@ class OpenstackInstaller(AbstractInstaller):
                  os_image=None,
                  images_dir=None,
                  osp_image_download=False,
+                 osp_image_unique=False,
                  args=None,
                  **kwargs):
         super().__init__(**kwargs)
@@ -220,6 +251,7 @@ class OpenstackInstaller(AbstractInstaller):
         self.args = args
         self.os_image = os_image
         self.image_download = osp_image_download
+        self.image_uniq = osp_image_unique
         self.osp_fip = None
         self.network = None
         self.connection = None
@@ -232,7 +264,10 @@ class OpenstackInstaller(AbstractInstaller):
 
     def acquire_resources(self):
         self.connection = _load_connection_openstack(self.osp_cloud)
-        if self.image_download and (self.os_image is None or self.os_image == ""):
+        if self.image_uniq and (self.os_image is None or self.os_image == ""):
+            self.os_image = upload_uniq_image(self.connection, self.osp_cloud, self.cluster_name,
+                                              self.images_dir, self.installer)
+        elif self.image_download and (self.os_image is None or self.os_image == ""):
             self.os_image = resolve_image(self.connection, self.osp_cloud, self.cluster_name,
                                           self.images_dir, self.installer, None)
         self.network, self.osp_network = _find_fit_network(self.connection, self.network_list)

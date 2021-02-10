@@ -66,7 +66,7 @@ setup(
         "cffi==1.14.4",
         "chardet==4.0.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "coloredlogs==15.0",
-        "cryptography==3.3.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
+        "cryptography==3.3.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
         "decorator==4.4.2",
         "dogpile.cache==1.1.1; python_version >= '3.6'",
         "dynaconf[yaml]==3.1.2",

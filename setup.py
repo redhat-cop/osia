@@ -75,7 +75,7 @@ setup(
         "humanfriendly==9.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "idna==2.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "iso8601==0.1.13",
-        "jinja2==2.11.2",
+        "jinja2==2.11.3",
         "jmespath==0.10.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "jsonpatch==1.28; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "jsonpointer==2.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",

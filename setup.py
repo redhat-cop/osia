@@ -88,7 +88,7 @@ setup(
         "pbr==5.5.1; python_version >= '2.6'",
         "pycparser==2.20; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "python-dateutil==2.8.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-        "pyyaml==5.3.1",
+        "pyyaml==5.4",
         "requests==2.25.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "requestsexceptions==1.4.0",
         "ruamel.yaml==0.16.12",

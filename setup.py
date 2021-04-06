@@ -97,7 +97,7 @@ setup(
         "smmap==3.0.4; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "soupsieve==2.1; python_version >= '3.0'",
         "stevedore==3.3.0; python_version >= '3.6'",
-        "urllib3==1.26.2; python_version != '3.4'",
+        "urllib3==1.26.4; python_version != '3.4'",
     ],
     extras_require={"dev": []},
     dependency_links=[],

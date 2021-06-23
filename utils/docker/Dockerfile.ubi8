@@ -11,15 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM registry.access.redhat.com/ubi8/python-36:latest as build
+FROM registry.access.redhat.com/ubi8/python-38:latest as build
 
 USER root
 ADD . ./
-RUN ./setup.py bdist_wheel &&\
+RUN pip install --upgrade pip &&\
+    pip install --upgrade poetry &&\
+    poetry install &&\
+    poetry build &&\
     cp dist/osia-*-py3-none-any.whl /
 
 
-FROM registry.access.redhat.com/ubi8/python-36:latest
+FROM registry.access.redhat.com/ubi8/python-38:latest
 
 USER root
 COPY --from=build /osia-*-py3-none-any.whl ./

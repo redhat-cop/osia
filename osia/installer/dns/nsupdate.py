@@ -28,8 +28,8 @@ class NSUpdate(DNSUtil):
         self.zone = zone
 
     def _exec_nsupdate(self, string: str):
-        nsu = Popen(["nsupdate", "-k", self.key_file], stdin=PIPE, universal_newlines=True)
-        nsu.communicate(string)
+        with Popen(["nsupdate", "-k", self.key_file], stdin=PIPE, universal_newlines=True) as nsu:
+            nsu.communicate(string)
 
     def provider_name(self):
         return 'nsupdate'

@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "osia"
+version = "0.2.0"
+description = "OpenShift infra automation"
+authors = ["Miroslav Jaros <mirek@mijaros.cz>"]
+license = "Apache-2.0"
+readme = 'README.md'
+keywords = ["OpenShift", "OpenStack", "AWS", "automation"]
+classifiers = [
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Build Tools",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9"
+]
+
+
+[tool.poetry.scripts]
+osia = 'osia.cli:main_cli'
+
+[tool.poetry.dependencies]
+python = "^3.8"
+openstacksdk = "*"
+boto3 = "*"
+jinja2 = "*"
+dynaconf = {extras = ["yaml"], version = "*"}
+gitpython = "*"
+beautifulsoup4 = "*"
+coloredlogs = "*"
+
+[tool.poetry.dev-dependencies]
+flake8 = "*"
+ipython = "*"
+pylint = "*"
+sphinx = "*"
+recommonmark = "*"
+sphinx-rtd-theme = "*"
+sphinx-argparse = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

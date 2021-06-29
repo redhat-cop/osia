@@ -61,6 +61,7 @@ ARGUMENTS = {
         'images_dir': {'help': 'Directory where images should be stored', 'type': str,
                        'default': 'images'},
         'skip_clean': {'help': 'Skip clean when installation fails', 'action': 'store_true'},
+        'enable_fips': {'help': 'Enable fips mode to the cluster', 'action': 'store_true'},
     },
     'deprecated': {
         'psi_cloud': {'help': 'DEPRECATED see osp_cloud'},

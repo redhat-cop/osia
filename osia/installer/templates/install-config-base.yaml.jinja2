@@ -16,7 +16,8 @@ limitations under the License.
 apiVersion: v1
 baseDomain: {{ base_domain }}
 {% if certificate_bundle %}additionalTrustBundle: |
-  {{ certificate_bundle | indent( width=2, indentfirst=False) }}{% endif %}
+  {{ certificate_bundle | indent(width=2) }}{% endif %}
+{% if enable_fips %}fips: true{% endif %}
 compute:
 - hyperthreading: Enabled
   name: worker

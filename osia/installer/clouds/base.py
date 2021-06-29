@@ -41,6 +41,7 @@ class AbstractInstaller(ABC):
                  certificate_bundle_file=None,
                  cluster_directory=None,
                  skip_clean=False,
+                 enable_fips=False,
                  installer=None,
                  **unused_kwargs):
         self.cluster_name = cluster_name
@@ -58,6 +59,7 @@ class AbstractInstaller(ABC):
         self.cluster_directory = cluster_directory
         self.skip_clean = skip_clean
         self.installer = installer
+        self.enable_fips = enable_fips
 
     @abstractmethod
     def acquire_resources(self):

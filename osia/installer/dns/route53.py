@@ -14,7 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Module implements dns methods to work with route53 provider"""
+import logging
 import boto3
+
 from osia.installer.clouds.base import AbstractInstaller
 from osia.installer.dns.base import DNSUtil
 
@@ -59,9 +61,15 @@ class Route53Provider(DNSUtil):
                  }
             ]
         }
-        _get_connection().change_resource_record_sets(
-            HostedZoneId=self._get_hosted_zone(),
-            ChangeBatch=change_batch)
+        conn = _get_connection()
+        try:
+            conn.change_resource_record_sets(
+                HostedZoneId=self._get_hosted_zone(),
+                ChangeBatch=change_batch)
+        except conn.exceptions.InvalidChangeBatch as ex:
+            logging.warning("Exception thrown while %s operation, next steps will possibly fail",
+                            mode.lower())
+            logging.debug(ex)
         self.modified = True
 
     def add_api_domain(self, instance: AbstractInstaller):

@@ -32,8 +32,9 @@ class InstallerExecutionException(Exception):
 
 def execute_installer(installer, base_path, operation, os_image=None):
     """Function executes actual installation of OpenShift"""
-    additional_env = environ.copy()
+    additional_env = None
     if os_image is not None and os_image:
+        additional_env = environ.copy()
         additional_env.update({'OPENSHIFT_INSTALL_OS_IMAGE_OVERRIDE': os_image})
     with Popen([installer, operation, 'cluster', '--dir', base_path],
                env=additional_env, universal_newlines=True) as proc:

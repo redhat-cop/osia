@@ -18,7 +18,6 @@ openshift"""
 import argparse
 import logging
 from typing import List
-from os import environ, getcwd
 import coloredlogs
 
 from dynaconf import settings
@@ -177,8 +176,6 @@ def _create_commons():
                                     required=False, default='installers')],
         [['--skip-git'], dict(help='When set, the persistance will be skipped',
                               action='store_true')],
-        [['--orig-user-home'], dict(help='Forbid change of user home location',
-                                    action='store_true')],
         [['-v', '--verbose'], dict(help='Increase verbosity level', action='store_true')]
     ]
     for k in common_arguments:
@@ -217,6 +214,5 @@ def main_cli():
     else:
         coloredlogs.install(level='INFO')
     logging.captureWarnings(True)
-    if not vars(args).get('orig_user_home', False):
-        environ['HOME'] = getcwd()
+
     args.func(args)

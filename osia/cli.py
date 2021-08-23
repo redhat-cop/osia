@@ -75,7 +75,7 @@ ARGUMENTS = {
     }
 }
 
-for a in [v for a in ARGUMENTS for u, v in ARGUMENTS[a].items()]:
+for a in [v for _, x in ARGUMENTS.items() for u, v in x.items()]:
     if not a.get('proc', None):
         a['proc'] = _identity
 
@@ -192,7 +192,7 @@ def _setup_parser():
 
     install = sub_parsers.add_parser('install', help='Install new cluster', parents=[commons])
 
-    for arg, value in sorted({k: v for a in ARGUMENTS for k, v in ARGUMENTS[a].items()}.items()):
+    for arg, value in sorted({k: v for _, x in ARGUMENTS.items() for k, v in x.items()}.items()):
         install.add_argument(f"--{arg.replace('_', '-')}",
                              **{k: v for k, v in value.items() if k != 'proc'})
     install.set_defaults(func=_exec_install_cluster)

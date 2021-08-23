@@ -30,7 +30,7 @@ class AWSInstaller(AbstractInstaller):
                  **kwargs):
         super().__init__(**kwargs)
         self.cluster_region = cluster_region
-        self.list_of_regions = list_of_regions if list_of_regions else list()
+        self.list_of_regions = list_of_regions if list_of_regions else []
 
     def get_template_name(self):
         return 'aws.jinja2'

@@ -97,7 +97,7 @@ def _find_best_fit(networks: dict) -> str:
 def _find_fit_network(osp_connection: Connection,
                       networks: List[str]) -> Tuple[Optional[str], Optional[str]]:
     named_networks = {k['name']: k for k in osp_connection.list_networks() if k['name'] in networks}
-    results = dict()
+    results = {}
     for net_name in networks:
         net_avail = osp_connection.network.get_network_ip_availability(named_networks[net_name])
         results[net_name] = net_avail['total_ips'] / net_avail['used_ips']
@@ -170,7 +170,7 @@ def upload_uniq_image(osp_connection: Connection,
     image = osp_connection.image.find_image(image_name)
     logging.info("Image uploaded as %s", image.name)
     with open(Path(cluster_name).joinpath("fips.json"), "w") as fips:
-        obj = {'cloud': cloud, 'fips': list(), 'image': image_name}
+        obj = {'cloud': cloud, 'fips': [], 'image': image_name}
         json.dump(obj, fips)
     return image.name
 
@@ -215,7 +215,7 @@ def resolve_image(osp_connection: Connection,
             logging.debug("Openstack error: %s", err)
             return resolve_image(osp_connection, cloud, cluster_name, images_dir, installer, err)
     with open(Path(cluster_name).joinpath("fips.json"), "w") as fips:
-        obj = {'cloud': cloud, 'fips': list(), 'image': image_name}
+        obj = {'cloud': cloud, 'fips': [], 'image': image_name}
         json.dump(obj, fips)
     return image.name
 

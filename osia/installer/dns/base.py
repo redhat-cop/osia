@@ -42,7 +42,7 @@ class DNSProvider:
         return cls.__instance
 
     def __init__(self):
-        self.providers = dict()
+        self.providers = {}
 
     def __add_provider(self, name: str, clazz: ClassVar):
         self.providers[name] = clazz

@@ -1,9 +1,11 @@
 """Module implements logic for rhcos image download"""
+import subprocess
 from subprocess import Popen, PIPE
 from shutil import copyfileobj
 from pathlib import Path
 from typing import Tuple
 from tempfile import NamedTemporaryFile
+
 
 import gzip
 import re
@@ -16,7 +18,28 @@ from .utils import get_data
 GITHUB_URL = "https://raw.githubusercontent.com/openshift/installer/{commit}/data/data/rhcos.json"
 
 
-def get_commit(installer: str) -> str:
+class CoreOsException(Exception):
+    """CoreOsException represents error while executing installer in older version
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, *kwargs)
+
+
+def _get_coreos_json(installer: str) -> str:
+    json_data = {}
+    with Popen([installer, "coreos", "print-stream-json"], stdout=PIPE,
+               stderr=subprocess.DEVNULL, universal_newlines=True) as proc:
+        proc.wait()
+        if proc.returncode != 0:
+            raise CoreOsException("Installer doesn't support coreos subcommand")
+        json_data = json.loads(proc.stdout.read())
+    json_part = json_data["architectures"]["x86_64"]["artifacts"]["openstack"]
+    release_str = json_part["release"]
+    json_part = json_part["formats"]["qcow2.gz"]
+    return json_part.get("disk", json_part)["location"], release_str
+
+
+def get_commit(installer: str) -> Tuple[str, str]:
     """Function extracts source commit from installer,
     in order to find associated rhcos image"""
     version_str = ""
@@ -28,14 +51,24 @@ def get_commit(installer: str) -> str:
     return commits[0]
 
 
-def get_url(installer: str) -> Tuple[str, str]:
-    """Function builds url to rhcos image and version of
-    rhcos iamge."""
+def _get_old_url(installer: str) -> Tuple[str, str]:
     commit = get_commit(installer)
     gh_data_link = GITHUB_URL.format(commit=commit)
     rhcos_json = requests.get(gh_data_link, allow_redirects=True)
     rhcos_data = json.loads(rhcos_json.content)
     return rhcos_data['baseURI'] + rhcos_data['images']['openstack']['path'], rhcos_data['buildid']
+
+
+def get_url(installer: str) -> Tuple[str, str]:
+    """Function builds url to rhcos image and version of
+    rhcos iamge."""
+    url, version = None, None
+    try:
+        url, version = _get_coreos_json(installer)
+    except CoreOsException as ex:
+        logging.debug(ex)
+        url, version = _get_old_url(installer)
+    return url, version
 
 
 def _extract_gzip(buff: NamedTemporaryFile, target: str) -> Path:

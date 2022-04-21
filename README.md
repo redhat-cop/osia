@@ -48,20 +48,34 @@ The configuration has following structure:
 default:
   cloud:
     openstack:
-      base_domain: ''
-      certificate_bundle_file: ''
-      pull_secret_file: ''
-      ssh_key_file: ''
-      osp_cloud: ''
-      osp_base_flavor: ''
-      network_list: []
+      base_env: env1
+      environments:
+      - name: env1
+        base_domain: ''
+        certificate_bundle_file: ''
+        pull_secret_file: ''
+        ssh_key_file: ''
+        osp_cloud: ''
+        osp_base_flavor: ''
+        network_list: []
+      - name: env2
+        base_domain: ''
+        certificate_bundle_file: ''
+        pull_secret_file: ''
+        ssh_key_file: ''
+        osp_cloud: ''
+        osp_base_flavor: ''
+        network_list: []
     aws:
-      base_domain: ''
-      pull_secret_file: ''
-      certificate_bundle_file: ''
-      ssh_key_file: ''
-      worker_flavor: '' 
-      list_of_regions: []
+      base_env: default
+      environments:
+      - name: default
+        base_domain: ''
+        pull_secret_file: ''
+        certificate_bundle_file: ''
+        ssh_key_file: ''
+        worker_flavor: '' 
+        list_of_regions: []
   dns:
     route53:
       ttl: 0

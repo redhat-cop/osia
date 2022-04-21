@@ -20,8 +20,8 @@ import logging
 from typing import List
 import coloredlogs
 
-from dynaconf import settings
 from .installer import install_cluster, delete_cluster, storage, download_installer
+from .config import read_config
 
 
 def _identity(in_attr: str) -> str:
@@ -36,6 +36,7 @@ ARGUMENTS = {
     'common': {
         'cloud': {'help': 'Cloud provider to be used.', 'type': str,
                   'choices': ['openstack', 'aws']},
+        'cloud_environment': {'help': 'Environment of cloud to be used.', 'type': str},
         'dns_provider': {'help': 'Provider of dns used with openstack cloud',
                          'type': str, 'choices': ['nsupdate', 'route53']}
     },
@@ -92,36 +93,11 @@ def _resolve_installer(from_args):
 
 
 def _merge_dictionaries(from_args):
-    result = {'cloud': None,
-              'dns': None,
-              'installer': _resolve_installer(from_args),
-              'cloud_name': None,
-              'cluster_name': from_args.cluster_name}
-    if not from_args.__contains__('cloud'):
-        return result
-    defaults = settings.as_dict()
-    if from_args.dns_provider is not None:
-        result['dns'] = {'provider': from_args.dns_provider,
-                         'conf': defaults['DNS'][from_args.dns_provider]}
-        result['dns']['conf'].update(
-            {j[4:]: i['proc'](vars(from_args)[j])
-             for j, i in ARGUMENTS['dns'].items()
-             if vars(from_args)[j] is not None}
-        )
-    if from_args.cloud is not None:
-        result['cloud_name'] = from_args.cloud
-        result['cloud'] = defaults['CLOUD'][from_args.cloud]
-        result['cloud'].update(
-            {j: i['proc'](vars(from_args)[j]) for j, i in ARGUMENTS['install'].items()
-             if vars(from_args)[j] is not None}
-        )
+    result = read_config(from_args, ARGUMENTS)
+    result["installer"] = _resolve_installer(from_args)
+    if result.get('cloud'):
         # pylint: disable=unsupported-assignment-operation
         result['cloud']['installer'] = result['installer']
-        if result['dns'] is not None:
-            result['dns']['conf'].update({
-                'cluster_name': from_args.cluster_name,
-                'base_domain': result['cloud']['base_domain']
-            })
     return result
 
 

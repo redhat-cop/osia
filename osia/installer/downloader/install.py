@@ -15,7 +15,7 @@
 # limitations under the License.
 """Module responsible for download of openshift-install binary"""
 from shutil import copyfileobj
-from sys import platform
+from platform import uname
 from tempfile import NamedTemporaryFile
 from pathlib import Path
 from typing import Tuple, Optional
@@ -35,16 +35,15 @@ PROD_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp/"
 BUILD_ROOT = "https://openshift-release-artifacts.svc.ci.openshift.org/"
 PREVIEW_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/"
 
-VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)-(?P<version>.*)\.tar\.gz")
+VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)(?P<arch>-arm64)?-(?P<version>.*)\.tar\.gz")
 EXTRACTION_RE = re.compile(r'.*Extracting tools for .*, may take up to a minute.*')
 
 
 def _current_platform():
-    if platform == "linux":
-        return platform
-    if platform == "darwin":
-        return "mac"
-    raise Exception(f"Unrecognized platform {platform}")
+    un = uname()
+    if un.system not in ["Linux", "Darwin"]:
+        raise Exception(f"Unrecognized platform {un.system}")
+    return un.system.lower(), un.machine
 
 
 def get_url(directory: str) -> Tuple[Optional[str], Optional[str]]:
@@ -55,9 +54,11 @@ def get_url(directory: str) -> Tuple[Optional[str], Optional[str]]:
     tree = BeautifulSoup(lst.content, 'html.parser')
     links = tree.find_all('a')
     installer, version = None, None
+    curr_plat = _current_platform()
+    curr_proc = None if curr_plat[1] == "x86_64" else "-amd64"
     for k in links:
         match = VERSION_RE.match(k.get('href'))
-        if match and match.group('platform') == _current_platform():
+        if match and match.group('platform') == curr_plat[0] and match.group("arch") == curr_proc:
             installer = lst.url + k.get('href')
             version = match.group('version')
     return installer, version

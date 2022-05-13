@@ -25,7 +25,7 @@ def _resolve_cloud_name(args: argparse.Namespace) -> Optional[Dict]:
                       'please use environments list and default_env option. This behavior will be '
                       'removed in future releases.')
         return defaults['CLOUD'][args.cloud]
-    default_env = defaults['CLOUD'][args.cloud].get('cloud_env', None) \
+    default_env = defaults['CLOUD'][args.cloud].get('base_env', None) \
         if args.cloud_environment is None else \
         args.cloud_environment
     if default_env is None:

@@ -22,14 +22,18 @@ from osia.installer.clouds.base import AbstractInstaller
 
 class NSUpdate(DNSUtil):
     """Implementation of DNSUtil specific for nsupdate dns provider"""
-    def __init__(self, key_file=None, server=None, zone=None, **kwargs):
+    def __init__(self, key_file=None, server=None, zone=None, use_ipv4=False, **kwargs):
         super().__init__(**kwargs)
         self.key_file = key_file
         self.server = server
         self.zone = zone
+        self.use_ipv4 = use_ipv4
 
     def _exec_nsupdate(self, string: str):
-        with Popen(["nsupdate", "-k", self.key_file], stdin=PIPE, universal_newlines=True) as nsu:
+        nsupdate_args = ["nsupdate", "-k", self.key_file]
+        if self.use_ipv4:
+            nsupdate_args.append('-4')
+        with Popen(nsupdate_args, stdin=PIPE, universal_newlines=True) as nsu:
             nsu.communicate(string)
             self.modified = True
 

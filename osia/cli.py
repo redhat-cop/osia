@@ -72,7 +72,9 @@ ARGUMENTS = {
         'dns_ttl': {'help': 'TTL of the records', 'type': int},
         'dns_key_file': {'help': 'Keyfile used to access dns server via nsupdate'},
         'dns_zone': {'help': 'Zone on server where the record will be stored'},
-        'dns_server': {'help': 'Address of server with running bind'}
+        'dns_server': {'help': 'Address of server with running bind'},
+        'dns_use_ipv4': {'help': 'Use only IPv4 for DNS settings', 'action': 'store_const',
+                         'const': True}
     }
 }
 

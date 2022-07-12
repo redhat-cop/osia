@@ -84,6 +84,7 @@ default:
       zone: ''
       key_file: ''
       ttl: 0 
+      use_ipv4: false
 ```
 
 Every key here is overridible by the argument passed to the installer.

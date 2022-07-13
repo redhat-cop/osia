@@ -30,7 +30,7 @@ def _resolve_cloud_name(args: argparse.Namespace) -> Optional[Dict]:
         args.cloud_environment
     if default_env is None:
         logging.error("Couldn't resolve default environment")
-        raise Exception("Invalid environment setup, base_env is missing")
+        raise Exception("Invalid environment setup, cloud_env is missing")
     for env in defaults['CLOUD'][args.cloud]['environments']:
         if env['name'] == default_env:
             return env

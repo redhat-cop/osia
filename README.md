@@ -48,7 +48,7 @@ The configuration has following structure:
 default:
   cloud:
     openstack:
-      base_env: env1
+      cloud_env: env1
       environments:
       - name: env1
         base_domain: ''
@@ -67,7 +67,7 @@ default:
         osp_base_flavor: ''
         network_list: []
     aws:
-      base_env: default
+      cloud_env: default
       environments:
       - name: default
         base_domain: ''

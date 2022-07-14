@@ -36,7 +36,7 @@ ARGUMENTS = {
     'common': {
         'cloud': {'help': 'Cloud provider to be used.', 'type': str,
                   'choices': ['openstack', 'aws']},
-        'cloud_environment': {'help': 'Environment of cloud to be used.', 'type': str},
+        'cloud_env': {'help': 'Environment of cloud to be used.', 'type': str},
         'dns_provider': {'help': 'Provider of dns used with openstack cloud',
                          'type': str, 'choices': ['nsupdate', 'route53']}
     },

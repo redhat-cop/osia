@@ -26,8 +26,8 @@ def _resolve_cloud_name(args: argparse.Namespace) -> Optional[Dict]:
                       'removed in future releases.')
         return defaults['CLOUD'][args.cloud]
     default_env = defaults['CLOUD'][args.cloud].get('cloud_env', None) \
-        if args.cloud_environment is None else \
-        args.cloud_environment
+        if args.cloud_env is None else \
+        args.cloud_env
     if default_env is None:
         logging.error("Couldn't resolve default environment")
         raise Exception("Invalid environment setup, cloud_env is missing")

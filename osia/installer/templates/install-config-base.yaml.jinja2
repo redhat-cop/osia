@@ -43,6 +43,7 @@ networking:
     hostPrefix: 64{% endif %}
   machineNetwork:
   - cidr: {% block networkIp %}{% endblock %}
+{% if enable_ipv6 %}  - cidr: fd00::/48{% endif %}
   networkType: OpenShiftSDN
   serviceNetwork:
   - 172.30.0.0/16

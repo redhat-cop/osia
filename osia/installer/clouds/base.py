@@ -42,6 +42,7 @@ class AbstractInstaller(ABC):
                  cluster_directory=None,
                  skip_clean=False,
                  enable_fips=False,
+                 enable_ipv6=False,
                  installer=None,
                  **unused_kwargs):
         self.cluster_name = cluster_name
@@ -60,6 +61,7 @@ class AbstractInstaller(ABC):
         self.skip_clean = skip_clean
         self.installer = installer
         self.enable_fips = enable_fips
+        self.enable_ipv6 = enable_ipv6
 
     @abstractmethod
     def acquire_resources(self):

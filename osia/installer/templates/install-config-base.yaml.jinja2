@@ -39,10 +39,14 @@ networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14
     hostPrefix: 23
-  machineCIDR: {% block networkIp %}{% endblock %}
+{% if enable_ipv6 %}  - cidr: fd01::/48
+    hostPrefix: 64{% endif %}
+  machineNetwork:
+  - cidr: {% block networkIp %}{% endblock %}
   networkType: OpenShiftSDN
   serviceNetwork:
   - 172.30.0.0/16
+{% if enable_ipv6 %}  - fd02::/112{% endif %}
 platform:{% block platform %}{% endblock %}
 pullSecret: '{{ pull_secret }}'
 sshKey: |

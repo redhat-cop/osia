@@ -44,7 +44,7 @@ networking:
   machineNetwork:
   - cidr: {% block networkIp %}{% endblock %}
 {% if enable_ipv6 %}  - cidr: fd00::/48{% endif %}
-  networkType: {% if enable_ipv6 %}OpenShiftSDN{% else %}OVNKubernetes{% endif %}
+  networkType: {% if enable_ipv6 %}OVNKubernetes{% else %}OpenShiftSDN{% endif %}
   serviceNetwork:
   - 172.30.0.0/16
 {% if enable_ipv6 %}  - fd02::/112{% endif %}

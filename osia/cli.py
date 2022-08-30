@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2020 Osia authors
+# Copyright 2022 Osia authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ ARGUMENTS = {
                        'default': 'images'},
         'skip_clean': {'help': 'Skip clean when installation fails', 'action': 'store_true'},
         'enable_fips': {'help': 'Enable fips mode to the cluster', 'action': 'store_true'},
-        'enable_ipv6': {'help': 'Install custer with internally used ipv6 for cluster and service networks.',
+        'enable_ipv6': {'help': 'Install custer with internally used ipv6.',
                         'action': 'store_true'},
     },
     'deprecated': {

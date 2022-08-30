@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2020 Osia authors
+# Copyright 2022 Osia authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class AbstractInstaller(ABC):
 
     __env: Environment = None
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     def __init__(self,
                  cluster_name=None,
                  base_domain=None,
@@ -42,6 +42,7 @@ class AbstractInstaller(ABC):
                  cluster_directory=None,
                  skip_clean=False,
                  enable_fips=False,
+                 enable_ipv6=False,
                  installer=None,
                  **unused_kwargs):
         self.cluster_name = cluster_name
@@ -60,6 +61,7 @@ class AbstractInstaller(ABC):
         self.skip_clean = skip_clean
         self.installer = installer
         self.enable_fips = enable_fips
+        self.enable_ipv6 = enable_ipv6
 
     @abstractmethod
     def acquire_resources(self):

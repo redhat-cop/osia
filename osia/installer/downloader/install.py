@@ -35,7 +35,8 @@ PROD_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp/"
 BUILD_ROOT = "https://openshift-release-artifacts.svc.ci.openshift.org/"
 PREVIEW_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/"
 
-VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)(?P<architecture>-\w+)?-(?P<version>\d+.*)\.tar\.gz")
+VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)"
+                        r"(?P<architecture>-\w+)?-(?P<version>\d+.*)\.tar\.gz")
 EXTRACTION_RE = re.compile(r'.*Extracting tools for .*, may take up to a minute.*')
 
 
@@ -61,7 +62,8 @@ def get_url(directory: str) -> Tuple[Optional[str], Optional[str]]:
     for k in links:
         match = VERSION_RE.match(k.get('href'))
         if match and match.group('platform') == os_name:
-            if (arch and not match.group('architecture')) or (not arch and match.group('architecture')):
+            if (arch and not match.group('architecture')) \
+                    or (not arch and match.group('architecture')):
                 continue
             installer = lst.url + k.get('href')
             version = match.group('version')

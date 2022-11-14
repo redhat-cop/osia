@@ -22,7 +22,7 @@ osia = 'osia.cli:main_cli'
 
 [tool.poetry.dependencies]
 python = "^3.8"
-openstacksdk = "*"
+openstacksdk = "<=0.61"
 boto3 = "*"
 jinja2 = "*"
 dynaconf = {extras = ["yaml"], version = "*"}

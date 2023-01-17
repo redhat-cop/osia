@@ -31,9 +31,9 @@ from bs4 import BeautifulSoup
 from .utils import get_data
 
 
-PROD_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp/"
+PROD_ROOT = "http://mirror.openshift.com/pub/openshift-v4/{}/clients/ocp/"
 BUILD_ROOT = "https://openshift-release-artifacts.svc.ci.openshift.org/"
-PREVIEW_ROOT = "http://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/"
+PREVIEW_ROOT = "http://mirror.openshift.com/pub/openshift-v4/{}/clients/ocp-dev-preview/"
 
 VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)"
                         r"(?P<architecture>-\w+)?-(?P<version>\d+.*)\.tar\.gz")
@@ -86,14 +86,14 @@ def get_devel_url(version: str) -> str:
     return get_url(req.url)
 
 
-def get_prev_url(version):
+def get_prev_url(version, arch):
     """Returns installer url from dev-preview sources"""
-    return get_url(PREVIEW_ROOT + version)
+    return get_url(PREVIEW_ROOT.format(arch) + version)
 
 
-def get_prod_url(version):
+def get_prod_url(version, arch):
     """Returns installer url from production sources"""
-    return get_url(PROD_ROOT + version)
+    return get_url(PROD_ROOT.format(arch) + version)
 
 
 def _get_storage_path(version: str, install_base: str) -> str:
@@ -126,10 +126,10 @@ def get_installer(tar_url: str, target: str):
     return get_data(tar_url, target, _extract_tar)
 
 
-def download_installer(installer_version: str, dest_directory: str, source: str) -> str:
+def download_installer(installer_version: str, installer_arch: str, dest_directory: str, source: str) -> str:
     """Starts search and extraction of installer"""
-    logging.debug("Getting version %s, storing to directory %s and devel is %r",
-                  installer_version, dest_directory, source)
+    logging.debug("Getting version %s of %s, storing to directory %s and devel is %r",
+                  installer_version, installer_arch, dest_directory, source)
 
     downloader = None
     if source == "prod":
@@ -141,7 +141,7 @@ def download_installer(installer_version: str, dest_directory: str, source: str)
     else:
         raise Exception("Error for source profile " + source)
 
-    url, version = downloader(installer_version)
+    url, version = downloader(installer_version, installer_arch)
     root = Path(dest_directory).joinpath(version)
 
     if root.exists() and root.joinpath('openshift-install').exists():

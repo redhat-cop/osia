@@ -9,6 +9,9 @@ from typing import Dict, Optional
 
 from dynaconf import Dynaconf
 
+AMD_ARCH = "amd64"
+ARM_ARCH = "aarch64"
+
 settings = Dynaconf(
     environments=True,
     lowercase_read=False,

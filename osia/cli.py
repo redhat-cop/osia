@@ -20,6 +20,7 @@ import logging
 from typing import List
 import coloredlogs
 
+from .config.config import ARCH_AMD, ARCH_ARM, ARCH_X86_64, ARCH_AARCH64, ARCH_S390X, ARCH_PPC
 from .installer import install_cluster, delete_cluster, storage, download_installer
 from .config import read_config
 
@@ -90,6 +91,7 @@ def _resolve_installer(from_args):
         return from_args.installer
 
     return download_installer(from_args.installer_version,
+                              from_args.installer_arch,
                               from_args.installers_dir,
                               from_args.installer_source)
 
@@ -135,6 +137,7 @@ def _get_helper(parser: argparse.ArgumentParser):
     def printer(unused_conf):
         print("Operation not set, please specify either install or clean!")
         parser.print_help()
+
     return printer
 
 
@@ -146,6 +149,10 @@ def _create_commons():
                                help='Executable binary of openshift install cli', default=None)],
         [['--installer-version'], dict(help='Version of downloader to be downloaded',
                                        default='latest', type=str)],
+        [['--installer-arch'], dict(help='Architecture of downloader to be downloaded',
+                                    choices=[ARCH_AMD, ARCH_X86_64, ARCH_ARM,
+                                             ARCH_AARCH64, ARCH_PPC, ARCH_S390X],
+                                    default=ARCH_AMD, type=str)],
         [['--installer-source'], dict(type=str,
                                       help='Set the source to search for installer',
                                       choices=["prod", "devel", "prev"],

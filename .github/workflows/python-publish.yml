@@ -23,11 +23,9 @@ jobs:
         sudo apt install  libcurl4-openssl-dev libssl-dev
         python -m pip install --upgrade pip
         pip install poetry
-        poetry install
+        make
     - name: Build and publish
       env:
         TOKEN: ${{ secrets.PYPI_TOKEN }}
       run: |
-        poetry build
-        poetry config pypi-token.pypi "${TOKEN}"
-        poetry publish
+        make release

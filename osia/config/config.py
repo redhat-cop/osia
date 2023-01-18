@@ -9,6 +9,13 @@ from typing import Dict, Optional
 
 from dynaconf import Dynaconf
 
+ARCH_AMD = "amd64"
+ARCH_X86_64 = "x86_64"
+ARCH_ARM = "arm64"
+ARCH_AARCH64 = "aarch64"
+ARCH_PPC = "ppc64le"
+ARCH_S390X = "s390x"
+
 settings = Dynaconf(
     environments=True,
     lowercase_read=False,

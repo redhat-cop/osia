@@ -25,6 +25,6 @@ dist: setup_poetry
 	poetry build
 
 release: dist
-	poetry release
+	poetry publish
 
 .PHONY: update clean all check

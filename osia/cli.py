@@ -20,7 +20,7 @@ import logging
 from typing import List
 import coloredlogs
 
-from .config.config import AMD_ARCH, ARM_ARCH, x86_64_ARCH, AARCH64_ARCH, S390X_ARCH, PPC_ARCH
+from .config.config import ARCH_AMD, ARCH_ARM, ARCH_X86_64, ARCH_AARCH64, ARCH_S390X, ARCH_PPC
 from .installer import install_cluster, delete_cluster, storage, download_installer
 from .config import read_config
 
@@ -150,8 +150,9 @@ def _create_commons():
         [['--installer-version'], dict(help='Version of downloader to be downloaded',
                                        default='latest', type=str)],
         [['--installer-arch'], dict(help='Architecture of downloader to be downloaded',
-                                    choices=[AMD_ARCH, x86_64_ARCH, ARM_ARCH, AARCH64_ARCH, PPC_ARCH, S390X_ARCH],
-                                    default=AMD_ARCH, type=str)],
+                                    choices=[ARCH_AMD, ARCH_X86_64, ARCH_ARM,
+                                             ARCH_AARCH64, ARCH_PPC, ARCH_S390X],
+                                    default=ARCH_AMD, type=str)],
         [['--installer-source'], dict(type=str,
                                       help='Set the source to search for installer',
                                       choices=["prod", "devel", "prev"],

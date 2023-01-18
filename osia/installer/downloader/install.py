@@ -126,7 +126,10 @@ def get_installer(tar_url: str, target: str):
     return get_data(tar_url, target, _extract_tar)
 
 
-def download_installer(installer_version: str, installer_arch: str, dest_directory: str, source: str) -> str:
+def download_installer(installer_version: str,
+                       installer_arch: str,
+                       dest_directory: str,
+                       source: str) -> str:
     """Starts search and extraction of installer"""
     logging.debug("Getting version %s of %s, storing to directory %s and devel is %r",
                   installer_version, installer_arch, dest_directory, source)

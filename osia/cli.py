@@ -194,10 +194,18 @@ def main_cli():
     It sets up the cli and starts the executor."""
     parser = _setup_parser()
     args = parser.parse_args()
+
+    coloredlogs.DEFAULT_FIELD_STYLES.update(filename=dict(color='blue'))
+    fmt: str = "%(asctime)s %(filename)12s:%(lineno)-5i %(levelname)-8s %(message)s"
+
     if vars(args).get('verbose', False):
-        coloredlogs.install(level='DEBUG')
+        coloredlogs.install(fmt=fmt, level=logging.DEBUG)
     else:
-        coloredlogs.install(level='INFO')
+        coloredlogs.install(fmt=fmt, level=logging.INFO)
+
     logging.captureWarnings(True)
+
+    for package in ["urllib3", "git"]:
+        logging.getLogger(package).setLevel(logging.INFO)
 
     args.func(args)

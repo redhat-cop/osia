@@ -189,7 +189,7 @@ def _setup_parser():
 
 def main_cli():
     """Function represents main entrypoint for the
-    osia intaller
+    osia installer
 
     It sets up the cli and starts the executor."""
     parser = _setup_parser()

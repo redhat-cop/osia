@@ -33,11 +33,12 @@ def check_repository():
     current tracking branch."""
     rep = Repo("./")
     remote = rep.active_branch.tracking_branch()
-    fetches = rep.remotes[remote.remote_name].fetch()
-    for fetch in fetches:
-        if fetch.name == remote.name and fetch.commit != rep.commit():
-            logging.warning("There are changes in remote repository, trying to pull")
-            rep.remotes[remote.remote_name].pull()
+    if remote:
+        fetches = rep.remotes[remote.remote_name].fetch()
+        for fetch in fetches:
+            if fetch.name == remote.name and fetch.commit != rep.commit():
+                logging.warning("There are changes in remote repository, trying to pull")
+                rep.remotes[remote.remote_name].pull()
     if rep.is_dirty():
         logging.warning("There are not committed changes in your repository, please fix this")
 
@@ -52,8 +53,8 @@ def write_changes(cluster_directory):
     rep.index.add(cluster_directory)
     logging.info("Commiting installer changes for cluster %s", cluster_directory)
     rep.index.commit(f"[OCP Installer] installation files for {cluster_directory} added")
-
-    rep.remotes[remote.remote_name].push()
+    if remote:
+        rep.remotes[remote.remote_name].push()
 
 
 def delete_directory(cluster_directory):
@@ -63,4 +64,5 @@ def delete_directory(cluster_directory):
     logging.info("Removing cluster directory from git repository %s", cluster_directory)
     rep.index.remove(cluster_directory, working_tree=True, r=True, f=True)
     rep.index.commit(f"[OCP Installer] removed installation files for {cluster_directory}")
-    rep.remotes[remote.remote_name].push()
+    if remote:
+        rep.remotes[remote.remote_name].push()

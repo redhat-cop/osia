@@ -41,7 +41,7 @@ def _resolve_cloud_name(args: argparse.Namespace) -> Optional[Dict]:
     for env in defaults['CLOUD'][args.cloud]['environments']:
         if env['name'] == default_env:
             return env
-    logging.debug("No environment found, maybe all variables are passed from command line")
+    logging.warning("No environment found, maybe all variables are passed from command line")
     return None
 
 

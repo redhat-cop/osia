@@ -42,7 +42,7 @@ class Route53Provider(DNSUtil):
             zones = _get_connection().list_hosted_zones()['HostedZones']
             result = [v['Id'] for v in zones if v['Name'] == (self.base_domain + ".")]
             if len(result) == 0:
-                raise Exception("Invalid number of results")
+                raise Exception(f"Unable to find hosted_zone {self.base_domain} in zone list.")
             self.zone_id = result[0]
         return self.zone_id
 

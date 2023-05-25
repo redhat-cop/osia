@@ -42,7 +42,7 @@ EXTRACTION_RE = re.compile(r'.*Extracting tools for .*, may take up to a minute.
 
 def _current_platform():
     if platform.system() == "Linux" and platform.machine() == "x86_64":
-        return "linux", None
+        return "linux", "amd64"
     if platform.system() == "Darwin" and platform.machine() == "arm64":
         return "mac", "arm64"
     if platform.system() == "Darwin" and platform.machine() == "x86_64":

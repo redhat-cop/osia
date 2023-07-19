@@ -29,7 +29,7 @@ def _resolve_cloud_name(args: argparse.Namespace) -> Optional[Dict]:
 
     if defaults['CLOUD'][args.cloud].get('environments', None) is None:
         warnings.warn('[DEPRECATION WARNING] The structure of settings.yaml is changed, '
-                      'please use environments list and default_env option. This behavior will be '
+                      'please use environments list and cloud_env option. This behavior will be '
                       'removed in future releases.')
         return defaults['CLOUD'][args.cloud]
     default_env = defaults['CLOUD'][args.cloud].get('cloud_env', None) \

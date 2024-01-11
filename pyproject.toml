@@ -22,13 +22,14 @@ osia = 'osia.cli:main_cli'
 
 [tool.poetry.dependencies]
 python = "^3.8"
-openstacksdk = "<=0.61"
+openstacksdk = "*"
 boto3 = "*"
 jinja2 = "*"
 dynaconf = {extras = ["yaml"], version = "*"}
 gitpython = "*"
 beautifulsoup4 = "*"
 coloredlogs = "*"
+urllib3 = "<2" # add temporarily to enable dependency resolution in real time
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"

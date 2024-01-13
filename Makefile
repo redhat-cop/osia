@@ -15,7 +15,7 @@ update: setup_poetry
 
 clean:
 	poetry env remove --all 
-	rm .mk_poetry*
+	rm -rf .mk_poetry* dist
 
 check: setup_poetry
 	poetry run flake8 osia --max-line-length 100 --show-source --statistics

@@ -72,7 +72,8 @@ disable=raw-checker-failed,
         unspecified-encoding,
         unused-private-member,
         missing-timeout,
-        unnecessary-dunder-call
+        unnecessary-dunder-call,
+        use-dict-literal
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

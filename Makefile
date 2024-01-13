@@ -14,8 +14,8 @@ update: setup_poetry
 	poetry update
 
 clean:
-	poetry env list | cut -d' ' -f1 | xargs poetry env remove
-	rm .mk_poetry*
+	poetry env remove --all 
+	rm -rf .mk_poetry* dist
 
 check: setup_poetry
 	poetry run flake8 osia --max-line-length 100 --show-source --statistics

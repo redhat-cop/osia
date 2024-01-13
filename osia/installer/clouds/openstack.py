@@ -23,9 +23,9 @@ import json
 import warnings
 import logging
 
-from munch import Munch
 from openstack.connection import from_config, Connection
 from openstack.network.v2.floating_ip import FloatingIP
+from openstack.network.v2.port import Port
 from openstack.image.v2.image import Image
 from openstack.exceptions import SDKException
 from osia.installer.clouds.base import AbstractInstaller
@@ -99,7 +99,7 @@ def _find_fit_network(osp_connection: Connection,
     named_networks = {k['name']: k for k in osp_connection.list_networks() if k['name'] in networks}
     results = {}
     for net_name in networks:
-        net_avail = osp_connection.network.get_network_ip_availability(named_networks[net_name])
+        net_avail = osp_connection.network.get_network_ip_availability(named_networks[net_name].id)
         subnet_usage = [(subnet['total_ips'], subnet['used_ips'])
                         for subnet in net_avail.subnet_ip_availability if subnet['ip_version'] == 4]
         total_ips, used_ips = [sum(i) for i in zip(*subnet_usage)]
@@ -108,7 +108,7 @@ def _find_fit_network(osp_connection: Connection,
     return named_networks[result]['id'], result
 
 
-def _find_cluster_ports(osp_connection: Connection, cluster_name: str) -> Munch:
+def _find_cluster_ports(osp_connection: Connection, cluster_name: str) -> Port:
     port_list = [k for k in osp_connection.list_ports()
                  if k.name.startswith(cluster_name) and k.name.endswith('ingress-port')]
     port = next(iter(port_list), None)

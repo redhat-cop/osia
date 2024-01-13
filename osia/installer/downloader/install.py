@@ -36,21 +36,23 @@ BUILD_ROOT = "https://openshift-release-artifacts.svc.ci.openshift.org/"
 PREVIEW_ROOT = "http://mirror.openshift.com/pub/openshift-v4/{}/clients/ocp-dev-preview/"
 
 VERSION_RE = re.compile(r"^openshift-install-(?P<platform>\w+)"
-                        r"(?P<architecture>-\w+)?-(?P<version>\d+.*)\.tar\.gz")
+                        r"(-(?P<architecture>\w+))?-(?P<version>\d+.*)\.tar\.gz")
 EXTRACTION_RE = re.compile(r'.*Extracting tools for .*, may take up to a minute.*')
 
 
 def _current_platform():
     if platform.system() == "Linux" and platform.machine() == "x86_64":
         return "linux", "amd64"
+    if platform.system() == "Linux" and platform.machine() == "arm64":
+        return "linux", "arm64"
     if platform.system() == "Darwin" and platform.machine() == "arm64":
         return "mac", "arm64"
     if platform.system() == "Darwin" and platform.machine() == "x86_64":
-        return "mac", None
+        return "mac", "amd64"
     raise Exception(f"Unrecognized platform {platform.system()} {platform.machine()}")
 
 
-def get_url(directory: str) -> Tuple[Optional[str], Optional[str]]:
+def get_url(directory: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """Searches the http directory and returns both url to installer
     and version.
     """
@@ -58,19 +60,19 @@ def get_url(directory: str) -> Tuple[Optional[str], Optional[str]]:
     tree = BeautifulSoup(lst.content, 'html.parser')
     links = tree.find_all('a')
     installer, version = None, None
-    os_name, arch = _current_platform()
+    os_name, local_arch = _current_platform()
     for k in links:
         match = VERSION_RE.match(k.get('href'))
         if match and match.group('platform') == os_name:
-            if (arch and not match.group('architecture')) \
-                    or (not arch and match.group('architecture')):
-                continue
-            installer = lst.url + k.get('href')
-            version = match.group('version')
+            if (local_arch == match.group('architecture')) \
+                    or (local_arch == arch and not match.group('architecture')):
+                installer = lst.url + k.get('href')
+                version = match.group('version')
+                break
     return installer, version
 
 
-def get_devel_url(version: str) -> str:
+def get_devel_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """
     Searches developement sources and returns url to installer
     """
@@ -83,17 +85,17 @@ def get_devel_url(version: str) -> str:
         req = requests.get(BUILD_ROOT + version, allow_redirects=True)
         ast = BeautifulSoup(req.content, 'html.parser')
     logging.debug('Installer found on page, continuing')
-    return get_url(req.url)
+    return get_url(req.url, arch)
 
 
-def get_prev_url(version, arch):
+def get_prev_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """Returns installer url from dev-preview sources"""
-    return get_url(PREVIEW_ROOT.format(arch) + version)
+    return get_url(PREVIEW_ROOT.format(arch) + version, arch)
 
 
-def get_prod_url(version, arch):
+def get_prod_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """Returns installer url from production sources"""
-    return get_url(PROD_ROOT.format(arch) + version)
+    return get_url(PROD_ROOT.format(arch) + version, arch)
 
 
 def _get_storage_path(version: str, install_base: str) -> str:

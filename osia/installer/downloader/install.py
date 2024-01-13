@@ -85,7 +85,7 @@ def get_devel_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]
         req = requests.get(BUILD_ROOT + version, allow_redirects=True)
         ast = BeautifulSoup(req.content, 'html.parser')
     logging.debug('Installer found on page, continuing')
-    return get_url(req.url)
+    return get_url(req.url, arch)
 
 
 def get_prev_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]]:

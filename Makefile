@@ -14,7 +14,7 @@ update: setup_poetry
 	poetry update
 
 clean:
-	poetry env list | cut -d' ' -f1 | xargs poetry env remove
+	poetry env remove --all 
 	rm .mk_poetry*
 
 check: setup_poetry

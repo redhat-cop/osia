@@ -73,7 +73,8 @@ disable=raw-checker-failed,
         unused-private-member,
         missing-timeout,
         unnecessary-dunder-call,
-        use-dict-literal
+        use-dict-literal,
+        broad-exception-raised #TODO fix this in next release
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -506,5 +507,5 @@ valid-metaclass-classmethod-first-arg=cls
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception
+overgeneral-exceptions=builtins.BaseException,
+                       builtins.Exception

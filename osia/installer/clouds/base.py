@@ -17,9 +17,14 @@
 creation.
 It also implements logic to obtain correct specification
 for specified installation platform"""
+
+import logging
+
 from abc import abstractmethod, ABC
+from subprocess import run
 from typing import ClassVar, Optional
 from jinja2 import Environment, PackageLoader
+from semantic_version import Version, SimpleSpec
 
 
 class AbstractInstaller(ABC):
@@ -60,6 +65,8 @@ class AbstractInstaller(ABC):
         self.skip_clean = skip_clean
         self.installer = installer
         self.enable_fips = enable_fips
+        self.ocp_version = None
+        self.network_type = "OVNKubernetes"
 
     @abstractmethod
     def acquire_resources(self):
@@ -86,6 +93,21 @@ class AbstractInstaller(ABC):
         """Returns apps ip if dns is supported, None otherwise
         """
 
+    def _resolve_version(self):
+        if self.ocp_version is None:
+            capture = run([self.installer, "version"], capture_output=True, check=False)
+            ver_string = capture.stdout.decode("utf-8").splitlines()[0].split(' ')[1]
+            self.ocp_version = ver_string
+            logging.info("Resolved installed version as %s", self.ocp_version)
+
+    def _resolve_network_type(self):
+        self._resolve_version()
+        ver = Version(self.ocp_version)
+        spec = SimpleSpec('<4.15')
+        if ver in spec:
+            logging.debug("Older version of openshift, falling back to OpenShiftSDN")
+            self.network_type = 'OpenShiftSDN'
+
     def check_clean(self):
         """Method returns if installation is configured to clean resources
         on failure."""
@@ -93,6 +115,7 @@ class AbstractInstaller(ABC):
 
     def process_template(self):
         """Method executes creation of install-config.yaml"""
+        self._resolve_network_type()
         with open(self.pull_secret_file) as ps_file:
             self.pull_secret = ps_file.read()
         with open(self.ssh_key_file) as key_file:

@@ -84,5 +84,13 @@ def download_image(image_url: str, image_file: str):
     """Main entrypoint for image download, function
     extracts url to rhcos image, downloads and extracts it
     to specified target"""
+    directory = Path(image_file).parent
+    # Check if the directory exists
+    if not directory.exists():
+        # If the directory does not exist, create it
+        directory.mkdir(parents=True)
+        logging.debug("Creating %s directory for download images", directory)
+    else:
+        logging.debug("Directory %s for images already exists", directory)
     res_file = get_data(image_url, image_file, _extract_gzip)
     return res_file

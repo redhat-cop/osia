@@ -21,7 +21,7 @@ metadata:
     - title: Documentation
       url: https://osia-python.readthedocs.io/en/latest/
 spec:
-  type: library
+  type: tool
   lifecycle: production
   owner: group:redhat/osia-devel
   domain: quality-community/quality-community

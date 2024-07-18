@@ -1,6 +1,6 @@
 ---
 apiVersion: backstage.io/v1alpha1
-kind: System
+kind: Component
 metadata:
   name: osia
   title: Osia
@@ -10,10 +10,10 @@ metadata:
   annotations:
     github.com/project-slug: 'redhat-cop/osia'
   tags:
-    - language:python
-    - category:cloud
-    - ecosystem:openshift
-    - ecosystem:public
+    - python
+    - cloud
+    - openshift
+    - public
   links:
     - title: Help
       url: https://github.com/redhat-cop/osia/blob/devel/README.md
@@ -21,5 +21,7 @@ metadata:
     - title: Documentation
       url: https://osia-python.readthedocs.io/en/latest/
 spec:
+  type: tool
+  lifecycle: production
   owner: group:redhat/osia-devel
   domain: quality-community/quality-community

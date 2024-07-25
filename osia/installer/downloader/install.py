@@ -49,6 +49,7 @@ def _current_platform():
         return "mac", "arm64"
     if platform.system() == "Darwin" and platform.machine() == "x86_64":
         return "mac", "amd64"
+
     raise Exception(f"Unrecognized platform {platform.system()} {platform.machine()}")
 
 
@@ -56,12 +57,14 @@ def get_url(directory: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """Searches the http directory and returns both url to installer
     and version.
     """
+    logging.debug('Url for installers look-up %s', directory)
     lst = requests.get(directory, allow_redirects=True)
     tree = BeautifulSoup(lst.content, 'html.parser')
     links = tree.find_all('a')
     installer, version = None, None
     os_name, local_arch = _current_platform()
     for k in links:
+        logging.debug('Parsing link: %s', k.get('href'))
         match = VERSION_RE.match(k.get('href'))
         if match and match.group('platform') == os_name:
             if (local_arch == match.group('architecture')) \
@@ -76,7 +79,7 @@ def get_devel_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]
     """
     Searches developement sources and returns url to installer
     """
-    req = requests.get(BUILD_ROOT + version, allow_redirects=True)
+    req = requests.get(BUILD_ROOT + version + "/", allow_redirects=True)
     ast = BeautifulSoup(req.content, 'html.parser')
     logging.info('Checking stage repository for installer')
     while len(ast.find_all('p')) != 0 and EXTRACTION_RE.match(next(ast.find_all('p')[0].children)):
@@ -90,12 +93,12 @@ def get_devel_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]
 
 def get_prev_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """Returns installer url from dev-preview sources"""
-    return get_url(PREVIEW_ROOT.format(arch) + version, arch)
+    return get_url(PREVIEW_ROOT.format(arch) + version + "/", arch)
 
 
 def get_prod_url(version: str, arch: str) -> Tuple[Optional[str], Optional[str]]:
     """Returns installer url from production sources"""
-    return get_url(PROD_ROOT.format(arch) + version, arch)
+    return get_url(PROD_ROOT.format(arch) + version + "/", arch)
 
 
 def _get_storage_path(version: str, install_base: str) -> str:
@@ -147,6 +150,7 @@ def download_installer(installer_version: str,
         raise Exception("Error for source profile " + source)
 
     url, version = downloader(installer_version, installer_arch)
+    logging.debug('Installer\'s URL is  %s and full version is %s', url, version)
     root = Path(dest_directory).joinpath(version)
 
     if root.exists() and root.joinpath('openshift-install').exists():

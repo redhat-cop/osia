@@ -17,8 +17,11 @@
 openshift"""
 import argparse
 import logging
-from typing import List
+from typing import List, Tuple, Optional
+from subprocess import Popen
+from semantic_version import Version, SimpleSpec
 import coloredlogs
+import distro
 
 from .config.config import ARCH_AMD, ARCH_ARM, ARCH_X86_64, ARCH_AARCH64, ARCH_S390X, ARCH_PPC
 from .installer import install_cluster, delete_cluster, storage, download_installer
@@ -84,16 +87,46 @@ for a in [v for _, x in ARGUMENTS.items() for u, v in x.items()]:
         a['proc'] = _identity
 
 
+def _check_fips_compatible(rhel_version: bool) -> Tuple[bool, Optional[str]]:
+    if not rhel_version:
+        return False, "FIPS installs are supported only from RHEL systems"
+    try:
+        with Popen(["fips-mode-setup", "--check"]) as proc:
+            proc.wait()
+            if proc.returncode != 0:
+                return False, "FIPS is not enabled on the system"
+    except FileNotFoundError:
+        return False, "fips-mode-setup must be installed on the system"
+
+    return True, None
+
+
 def _resolve_installer(from_args):
     if from_args.installer is None and from_args.installer_version is None:
         raise Exception('Either installer or installer-version must be passed')
     if from_args.installer:
         return from_args.installer
 
+    rhel_version = None
+    if distro.id() == "rhel":
+        rhel_version = distro.major_version()
+
+    if from_args.enable_fips:
+        supported, msg = _check_fips_compatible(rhel_version)
+        if not supported:
+            raise Exception(msg)
+
+        if Version.coerce(from_args.installer_version.split("-")[-1]) in SimpleSpec("<4.16"):
+            # ocp <4.16 does not have dedicated openshift-install-fips, it is
+            # fine to run normal installer on FIPS enabled RHEL
+            from_args.enable_fips = False
+
     return download_installer(from_args.installer_version,
                               from_args.installer_arch,
                               from_args.installers_dir,
-                              from_args.installer_source)
+                              from_args.installer_source,
+                              rhel_version=rhel_version,
+                              fips=from_args.enable_fips)
 
 
 def _merge_dictionaries(from_args):
@@ -122,6 +155,9 @@ def _exec_install_cluster(args):
 
 
 def _exec_delete_cluster(args):
+    # cleanup of fips cluster can be done from anywhere
+    args.enable_fips = None
+
     conf = _merge_dictionaries(args)
 
     if not args.skip_git:

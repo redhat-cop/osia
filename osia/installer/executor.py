@@ -73,7 +73,8 @@ def install_cluster(cloud_provider,
         logging.error(exception)
         if inst.check_clean():
             delete_cluster(cluster_name, installer)
-            return
+        # Do not continue in case of installer failure
+        return
 
     inst.post_installation()
 

@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "osia"
-version = "0.2.0"
+version = "0.2.0-alpha13"
 description = "OpenShift infra automation"
 authors = ["Miroslav Jaros <mirek@mijaros.cz>"]
+maintainers = ["Matej Dujava <mdujava@redhat.com>"]
 license = "Apache-2.0"
 readme = 'README.md'
 keywords = ["OpenShift", "OpenStack", "AWS", "automation"]

@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "osia"
-version = "0.2.0-alpha12"
+version = "0.2.0-alpha13"
 description = "OpenShift infra automation"
 authors = ["Miroslav Jaros <mirek@mijaros.cz>"]
+maintainers = ["Matej Dujava <mdujava@redhat.com>"]
 license = "Apache-2.0"
 readme = 'README.md'
 keywords = ["OpenShift", "OpenStack", "AWS", "automation"]
@@ -12,8 +13,10 @@ classifiers = [
         "Topic :: Software Development :: Build Tools",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9"
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13"
 ]
 
 
@@ -21,25 +24,32 @@ classifiers = [
 osia = 'osia.cli:main_cli'
 
 [tool.poetry.dependencies]
-python = "^3.8"
-openstacksdk = "*"
-boto3 = "*"
-jinja2 = "*"
-dynaconf = {extras = ["yaml"], version = "*"}
-gitpython = "*"
 beautifulsoup4 = "*"
+boto3 = "*"
 coloredlogs = "*"
-urllib3 = "<2" # add temporarily to enable dependency resolution in real time
+dynaconf = {extras = ["yaml"], version = "*"}
+distro = "*"
+gitpython = "*"
+jinja2 = "*"
+openstacksdk = "*"
+python = "^3.10"
 semantic-version = "^2.10.0"
+urllib3 = "*"
 
 [tool.poetry.dev-dependencies]
+boto3-stubs = "^1.35.39"
 flake8 = "*"
 ipython = "*"
+mypy = "^1.11.2"
 pylint = "*"
-sphinx = "*"
 recommonmark = "*"
-sphinx-rtd-theme = "*"
+sphinx = "*"
 sphinx-argparse = "*"
+sphinx-rtd-theme = "*"
+types-PyYAML = "*"
+types-beautifulsoup4 = "*"
+types-html5lib = "*"
+types-requests = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

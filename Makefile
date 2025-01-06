@@ -14,12 +14,19 @@ update: setup_poetry
 	poetry update
 
 clean:
-	poetry env remove --all 
+	poetry env remove --all
 	rm -rf .mk_poetry* dist
 
-check: setup_poetry
+check: setup_poetry flake8 pylint
+
+flake8: setup_poetry
 	poetry run flake8 osia --max-line-length 100 --show-source --statistics
-	poetry run pylint osia
+
+pylint mypy: setup_poetry
+	poetry run $@ osia
+
+black-check: setup_poetry
+	poetry run black --check osia
 
 dist: setup_poetry
 	poetry build

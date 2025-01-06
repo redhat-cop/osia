@@ -74,6 +74,7 @@ disable=raw-checker-failed,
         missing-timeout,
         unnecessary-dunder-call,
         use-dict-literal,
+        too-many-positional-arguments,
         broad-exception-raised #TODO fix this in next release
 
 # Enable the message, report, category or checker with the given id(s). You can

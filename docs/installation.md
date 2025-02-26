@@ -1,7 +1,7 @@
 Installation
 ============
 
-In order to successfully install this program and run it you need folowing dependencies:
+In order to successfully install this program and run it you need following dependencies:
 
 * `python3` and `pip`
 * `git` for the management of installation files
@@ -17,7 +17,7 @@ $ pip install tbd
 
 ## Docker image
 
-As of version `v0.1.4`, there are also docker images available in `quay.io`.
+As of version `v0.1.7`, there are also docker images available in `quay.io`.
 The images are stored in repository called _tbd_ and there are always two images per release
 
 * `osia-ubi7` docker image based on top of Universal Base Image for rhel 7

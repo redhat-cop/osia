@@ -20,14 +20,15 @@ from subprocess import Popen
 
 import coloredlogs  # type: ignore[import-untyped]
 import distro
-from semantic_version import (SimpleSpec,  # type: ignore[import-untyped]
-                              Version)
+from semantic_version import SimpleSpec  # type: ignore[import-untyped]
+from semantic_version import Version
 
 from .config import read_config
 from .config.config import (ARCH_AARCH64, ARCH_AMD, ARCH_ARM, ARCH_PPC,
                             ARCH_S390X, ARCH_X86_64)
 from .installer import (delete_cluster, download_installer, install_cluster,
                         storage)
+from .installer.downloader.image import download_rhcos_image, get_url
 
 
 def _identity(in_attr: str) -> str:
@@ -66,8 +67,6 @@ ARGUMENTS: dict = {
         'worker_flavor': {'help': 'flavor of worker node'},
         'worker_replicas': {'help': 'Number of replicas of worker nodes', 'type': int},
         'certificate_bundle_file': {'help': 'CA bundle file'},
-        'images_dir': {'help': 'Directory where images should be stored', 'type': str,
-                       'default': 'images'},
         'skip_clean': {'help': 'Skip clean when installation fails', 'action': 'store_true'},
         'enable_fips': {'help': 'Enable fips mode to the cluster', 'action': 'store_true'},
     },
@@ -174,8 +173,20 @@ def _exec_delete_cluster(args):
 
 
 def _exec_download_insaller(args):
+    args.cluster_name = ""
+    args.installer = None
     conf = _merge_dictionaries(args)
     print(conf['installer'])
+
+
+def _exec_download_rhcos_image(args):
+    args.cluster_name = ""
+    args.installer = None
+    args.enable_fips = None
+    conf = _merge_dictionaries(args)
+
+    url, version = get_url(conf['installer'])
+    print(download_rhcos_image(args.images_dir, url, version))
 
 
 def _get_helper(parser: argparse.ArgumentParser):
@@ -186,11 +197,20 @@ def _get_helper(parser: argparse.ArgumentParser):
     return printer
 
 
-def _create_commons() -> argparse.ArgumentParser:
-    commons = argparse.ArgumentParser(add_help=False)
+def _add_cluster_commons(commons: argparse.ArgumentParser) -> argparse.ArgumentParser:
     common_arguments: list[tuple[list[str], dict]] = [
         (['--cluster-name'], {"required": True, "help": "Name of the cluster"}),
         (['--installer'], {"required": False, "help": 'Executable binary of openshift install cli', "default": None}),
+        (['--skip-git'], {"help": 'When set, the persistance will be skipped', "action": 'store_true'}),
+    ]
+    for args, kwargs in common_arguments:
+        commons.add_argument(*args, **kwargs)
+    return commons
+
+
+def _create_commons() -> argparse.ArgumentParser:
+    commons = argparse.ArgumentParser(add_help=False)
+    common_arguments: list[tuple[list[str], dict]] = [
         (['--installer-version'], {"help": 'Version of downloader to be downloaded', "default": 'latest', "type": str}),
         (['--installer-arch'], {"help": 'Architecture of downloader to be downloaded',
                                 "choices": [ARCH_AMD, ARCH_X86_64, ARCH_ARM, ARCH_AARCH64, ARCH_PPC, ARCH_S390X],
@@ -199,7 +219,8 @@ def _create_commons() -> argparse.ArgumentParser:
                                   "choices": ["prod", "devel", "prev"], "default": 'prod'}),
         (['--installers-dir'], {"help": 'Folder where installers are stored', "required": False,
                                 "default": 'installers'}),
-        (['--skip-git'], {"help": 'When set, the persistance will be skipped', "action": 'store_true'}),
+        (['--images-dir'], {"help": 'Directory where images should be stored', "required": False,
+                            "default": 'images'}),
         (['-v', '--verbose'], {"help": 'Increase verbosity level', "action": 'store_true'}),
     ]
     for args, kwargs in common_arguments:
@@ -210,23 +231,29 @@ def _create_commons() -> argparse.ArgumentParser:
 def _setup_parser() -> argparse.ArgumentParser:
     commons = _create_commons()
 
+    cluster_commons = argparse.ArgumentParser(add_help=False, parents=[commons])
+    cluster_commons = _add_cluster_commons(cluster_commons)
+
     parser = argparse.ArgumentParser("osia")
     parser.set_defaults(func=_get_helper(parser))
     sub_parsers = parser.add_subparsers()
 
-    install = sub_parsers.add_parser('install', help='Install new cluster', parents=[commons])
+    install = sub_parsers.add_parser('install', help='Install new cluster', parents=[cluster_commons])
 
     for arg, value in sorted({k: v for _, x in ARGUMENTS.items() for k, v in x.items()}.items()):
         install.add_argument(f"--{arg.replace('_', '-')}",
                              **{k: v for k, v in value.items() if k != 'proc'})
     install.set_defaults(func=_exec_install_cluster)
 
-    clean = sub_parsers.add_parser('clean', help='Remove cluster', parents=[commons])
+    clean = sub_parsers.add_parser('clean', help='Remove cluster', parents=[cluster_commons])
     clean.set_defaults(func=_exec_delete_cluster)
 
-    download = sub_parsers.add_parser('download-installer', help='Download installer', parents=[commons])
-    download.add_argument("--enable-fips", action='store_true')
-    download.set_defaults(func=_exec_download_insaller)
+    installer = sub_parsers.add_parser('download-installer', help='Download installer', parents=[commons])
+    installer.add_argument("--enable-fips", help='Enable fips mode to the cluster', action='store_true')
+    installer.set_defaults(func=_exec_download_insaller)
+
+    rhcos_image = sub_parsers.add_parser('download-rhcos-image', help='Download rhcos image', parents=[commons])
+    rhcos_image.set_defaults(func=_exec_download_rhcos_image)
 
     return parser
 

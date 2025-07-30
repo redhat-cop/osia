@@ -24,8 +24,8 @@ from subprocess import run
 from typing import Protocol
 
 from jinja2 import Environment, PackageLoader
-from semantic_version import (SimpleSpec,  # type: ignore[import-untyped]
-                              Version)
+from semantic_version import SimpleSpec  # type: ignore[import-untyped]
+from semantic_version import Version
 
 
 class AbstractInstaller(ABC):

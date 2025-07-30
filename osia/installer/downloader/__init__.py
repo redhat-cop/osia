@@ -14,7 +14,7 @@
 # limitations under the License.
 """Module implements download logic of resources
 required by installer"""
-from .image import download_image, get_url
+from .image import download_image, download_rhcos_image, get_url
 from .install import download_installer
 
-__all__ = ['download_installer', 'download_image', 'get_url']
+__all__ = ['download_installer', 'download_image', 'download_rhcos_image', 'get_url']

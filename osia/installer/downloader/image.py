@@ -98,3 +98,18 @@ def download_image(image_url: str, image_file: str):
         logging.debug("Directory %s for images already exists", directory)
     res_file = get_data(image_url, image_file, _extract_gzip)
     return res_file
+
+
+def download_rhcos_image(images_dir: str, url: str, version: str) -> str:
+    """ Download rhcos image """
+    image_path = Path(images_dir).joinpath(f"rhcos-{version}.qcow2")
+    image_file = None
+    if image_path.exists():
+        logging.info("Found image at %s", image_path.name)
+        image_file = image_path.as_posix()
+        return image_file
+
+    logging.info("Starting download of image %s", url)
+    image_file = download_image(url, image_path.as_posix())
+
+    return image_path.as_posix()

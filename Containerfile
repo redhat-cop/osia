@@ -18,9 +18,13 @@ RUN dnf update -y && \
     curl \
     wget \
     unzip \
-    kubectl \
     && dnf clean all \
     && rm -rf /var/cache/dnf
+
+# Install kubectl manually
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/kubectl
 
 # Install Poetry globally
 RUN curl -sSL https://install.python-poetry.org | python3.11 - && \

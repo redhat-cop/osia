@@ -15,7 +15,6 @@ limitations under the License.
 #}
 apiVersion: v1
 baseDomain: {{ base_domain }}
-{% if installer_arch %}architecture: {{ installer_arch }}{% endif %}
 {% if certificate_bundle %}additionalTrustBundle: |
   {{ certificate_bundle | indent(width=2) }}{% endif %}
 {% if enable_fips %}fips: true{% endif %}

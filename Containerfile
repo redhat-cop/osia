@@ -4,7 +4,7 @@ FROM registry.access.redhat.com/ubi9/ubi:latest
 
 # Set labels
 LABEL name="osia-binary" \
-      version="0.2.0-alpha16" \
+      version="0.2.0-alpha17" \
       description="OpenShift Infrastructure Automation - Clean Binary"
 
 # Install required packages

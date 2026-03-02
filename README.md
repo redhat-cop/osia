@@ -1,13 +1,18 @@
 # OSIA
 
-OpenShift infra automation.
+**O**pen**S**hift **I**nfra **A**utomation — provision self-managed OpenShift clusters on AWS and OpenStack.
 
 ## Goal
 
-The tool aims to unified installer of OpenShift to various clouds which is
-easy to automate and use within CI.
+Automate the lifecycle of self-managed OpenShift clusters for CI.
 
-To see necessary steps for OpenShift installation please see [OpenShift documentation](https://docs.openshift.com).
+Unlike managed services such as ROSA or ARO, OSIA deploys
+[self-managed](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/installation_overview/index#installing-preparing-install-manage)
+OpenShift Container Platform clusters where you control the
+infrastructure. It wraps the `openshift-install` IPI installer with
+automation for CI workflows: finding available cloud resources,
+generating `install-config.yaml`, managing DNS records, and storing
+cluster artifacts in Git.
 
 To see full documentation of `osia` please follow to [Official documentation](https://redhat-cop.github.io/osia).
 

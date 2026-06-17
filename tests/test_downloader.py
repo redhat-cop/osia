@@ -58,7 +58,8 @@ def test_download_4190(tmp_path):
 
 def test_download_candidate_420(tmp_path):
     """ download from a prev source """
-    installer_version = "4.20.0-ec.4"
+    installer_version_on_site = "candidate-4.20"
+    installer_version = "4.20.0-ec.6"
 
     installer_arch = "amd64"
 
@@ -68,7 +69,7 @@ def test_download_candidate_420(tmp_path):
 
     source = "prev"
 
-    download_installer(installer_version, installer_arch, dest_directory, source)
+    download_installer(installer_version_on_site, installer_arch, dest_directory, source)
 
     assert os.path.exists(d / installer_version / INSTALLER_BINARY)
     assert os.access(d / installer_version / INSTALLER_BINARY, os.X_OK)

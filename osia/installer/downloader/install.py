@@ -63,6 +63,8 @@ def get_url(directory: str, arch: str, fips: bool = False,
 
     logging.debug('Url for installers look-up %s', directory)
     lst = requests.get(directory, allow_redirects=True)
+    if lst.status_code == 404:
+        raise Exception(f"Installer folder {directory} not found")
     tree = BeautifulSoup(lst.content, 'html.parser')
     links = tree.find_all('a')
     installer, version = None, None

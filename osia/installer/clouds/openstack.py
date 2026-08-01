@@ -27,7 +27,7 @@ from openstack.network.v2.floating_ip import FloatingIP
 from openstack.network.v2.port import Port
 
 from osia.installer.clouds.base import AbstractInstaller
-from osia.installer.downloader import download_image, get_url
+from osia.installer.downloader import download_rhcos_image, get_url
 
 
 class ImageException(Exception):
@@ -157,16 +157,9 @@ def upload_uniq_image(osp_connection: Connection,
                       images_dir: str,
                       installer: str):
     """Function uploads unique image to the cluster, instead of making shared one"""
-    inst_url, version = get_url(installer)
+    url, version = get_url(installer)
     image_name = f"osia-{cluster_name}-{version}"
-    image_path = Path(images_dir).joinpath(f"rhcos-{version}.qcow2")
-    image_file = None
-    if image_path.exists():
-        logging.info("Found image at %s", image_path.name)
-        image_file = image_path.as_posix()
-    else:
-        logging.info("Starting download of image %s", inst_url)
-        image_file = download_image(inst_url, image_path.as_posix())
+    image_file = download_rhcos_image(images_dir, url, version)
 
     logging.info("Starting upload of image into openstack")
     osp_connection.create_image(image_name, filename=image_file,
@@ -190,18 +183,11 @@ def resolve_image(osp_connection: Connection,
                   error: Exception | None):
     """Function searches for image in openstack and creates it
     if it doesn't exist"""
-    inst_url, version = get_url(installer)
+    url, version = get_url(installer)
     image_name = f"osia-rhcos-{version}"
     image = osp_connection.image.find_image(image_name, ignore_missing=True)
     if image is None:
-        image_path = Path(images_dir).joinpath(f"rhcos-{version}.qcow2")
-        image_file = None
-        if image_path.exists():
-            logging.info("Found image at %s", image_path.name)
-            image_file = image_path.as_posix()
-        else:
-            logging.info("Starting download of image %s", inst_url)
-            image_file = download_image(inst_url, image_path.as_posix())
+        image_file = download_rhcos_image(images_dir, url, version)
 
         logging.info("Starting upload of image into openstack")
         osp_connection.create_image(image_name, filename=image_file,

@@ -171,6 +171,10 @@ def download_installer(installer_version: str,
     if version:
         root = root.joinpath(version)
 
+    _, local_arch = _current_platform()
+    if installer_arch != local_arch:
+        root = root.joinpath(installer_arch)
+
     installer_exe_name = 'openshift-install'
 
     if fips:

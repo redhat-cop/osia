@@ -25,6 +25,10 @@ def _get_connection(*args, **kwargs):
     return boto3.client("ec2", *args, **kwargs)
 
 
+def _get_quotas_connection(*args, **kwargs):
+    return boto3.client("service-quotas", *args, **kwargs)
+
+
 class AWSInstaller(AbstractInstaller):
     """Object containing all configuration related
     to aws installation"""
@@ -72,7 +76,12 @@ class AWSInstaller(AbstractInstaller):
             region = _get_connection(candidate, **self.boto_kwargs)
             try:
                 count = len(region.describe_vpcs()['Vpcs'])
-                if count < 5:
+                quotas = _get_quotas_connection(candidate, **self.boto_kwargs)
+                quota = quotas.get_service_quota(
+                    ServiceCode='vpc',
+                    QuotaCode='L-F678F1CE',  # VPCs per Region
+                )['Quota']['Value']
+                if count < quota:
                     logging.debug("Selected region %s", candidate)
                     return candidate
             except ClientError:

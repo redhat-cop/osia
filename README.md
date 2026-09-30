@@ -97,3 +97,14 @@ default:
 Every key here is overridible by the argument passed to the installer.
 For explanation of any key, please check he documentation below.
 
+For AWS, `credentials_file` selects the `[default]` profile for both Osia's AWS
+calls and `openshift-install`, including cleanup after a failed installation.
+Temporary credentials with `aws_session_token` are supported. Relative paths are
+resolved from the current working directory, and `~` is expanded.
+There is no need to export `AWS_SHARED_CREDENTIALS_FILE`; `--credentials-file`
+overrides the path from settings. When no file is configured, the usual AWS
+credential lookup applies.
+
+To use the configured credentials when removing a cluster, select the AWS
+environment with `osia clean --cluster-name NAME --cloud aws` (and optionally
+`--cloud-env ENV`), or pass `--credentials-file PATH` directly.

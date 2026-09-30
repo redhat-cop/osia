@@ -29,8 +29,9 @@ class AWSInstaller(AbstractInstaller):
     """Object containing all configuration related
     to aws installation"""
 
+    # pylint: disable=too-many-arguments
     def __init__(self, cluster_region=None, list_of_regions=None,
-                 aws_access_key_id=None, aws_secret_access_key=None, **kwargs):
+                 aws_access_key_id=None, aws_secret_access_key=None, aws_session_token=None, **kwargs):
         super().__init__(**kwargs)
         self.cluster_region = cluster_region
         self.list_of_regions = list_of_regions if list_of_regions else []
@@ -38,6 +39,7 @@ class AWSInstaller(AbstractInstaller):
         self.boto_kwargs = {
             "aws_access_key_id": aws_access_key_id,
             "aws_secret_access_key": aws_secret_access_key,
+            "aws_session_token": aws_session_token,
         }
 
     def get_template_name(self):

@@ -27,7 +27,9 @@ def _get_connection(**kwargs):
 
 class Route53Provider(DNSUtil):
     """Class implements DNSUtil base specific for route53"""
-    def __init__(self, api_ip=None, apps_ip=None, aws_access_key_id=None, aws_secret_access_key=None, **kwargs):
+    # pylint: disable=too-many-arguments
+    def __init__(self, api_ip=None, apps_ip=None, aws_access_key_id=None,
+                 aws_secret_access_key=None, aws_session_token=None, **kwargs):
         super().__init__(**kwargs)
 
         self.zone_id = None
@@ -37,6 +39,7 @@ class Route53Provider(DNSUtil):
         self.boto_kwargs = {
             "aws_access_key_id": aws_access_key_id,
             "aws_secret_access_key": aws_secret_access_key,
+            "aws_session_token": aws_session_token,
         }
 
     def provider_name(self):

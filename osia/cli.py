@@ -45,7 +45,7 @@ ARGUMENTS: dict = {
         'cloud_env': {'help': 'Environment of cloud to be used.', 'type': str},
         'dns_provider': {'help': 'Provider of dns used with openstack cloud',
                          'type': str, 'choices': ['nsupdate', 'route53']},
-        'credentials_file': {'help': 'AWS config file for ec2, using "default" profile'},
+        'credentials_file': {'help': 'AWS shared credentials file, using "default" profile'},
     },
     'install': {
         'os_image': {'help': 'Image to override', 'type': str},
@@ -167,7 +167,8 @@ def _exec_delete_cluster(args):
     if not args.skip_git:
         storage.check_repository()
 
-    delete_cluster(conf['cluster_name'], conf['installer'])
+    delete_cluster(conf['cluster_name'], conf['installer'],
+                   credentials_file=conf['cloud'].get('credentials_file'))
 
     if not args.skip_git:
         storage.delete_directory(conf['cluster_name'])
@@ -217,6 +218,9 @@ def _setup_parser() -> argparse.ArgumentParser:
     install.set_defaults(func=_exec_install_cluster)
 
     clean = sub_parsers.add_parser('clean', help='Remove cluster', parents=[commons])
+    for arg in ('cloud', 'cloud_env', 'credentials_file'):
+        clean.add_argument(f"--{arg.replace('_', '-')}",
+                           **{k: v for k, v in ARGUMENTS['common'][arg].items() if k != 'proc'})
     clean.set_defaults(func=_exec_delete_cluster)
     return parser
 

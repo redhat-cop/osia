@@ -32,7 +32,7 @@ dynaconf = {extras = ["yaml"], version = "*"}
 distro = "*"
 gitpython = "*"
 jinja2 = "*"
-openstacksdk = "*"
+openstacksdk = "~4.11"
 python = "^3.10"
 semantic-version = "^2.10.0"
 urllib3 = "*"

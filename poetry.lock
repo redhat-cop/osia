@@ -2400,15 +2400,14 @@ files = [
 
 [[package]]
 name = "openstacksdk"
-version = "4.13.0"
+version = "4.11.0"
 description = "An SDK for building applications to work with OpenStack"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "python_version == \"3.10\""
 files = [
-    {file = "openstacksdk-4.13.0-py3-none-any.whl", hash = "sha256:3588662fdfba753ec32336dca836562622017ab8ed7b5bc910dd128681ebac8a"},
-    {file = "openstacksdk-4.13.0.tar.gz", hash = "sha256:ab5b0d7e3a42de3dbc78497b31b5be53abf77a962986b3a621821e07e38c69a2"},
+    {file = "openstacksdk-4.11.0-py3-none-any.whl", hash = "sha256:6314b183b237cc8c7ebce81d5354fdc37bbdb64612ade1d20f2d7090a80a8b4c"},
+    {file = "openstacksdk-4.11.0.tar.gz", hash = "sha256:0822b2182a1983f077776b9fa7586dd1f311e67dd82262c06f46d75244e3ef19"},
 ]
 
 [package.dependencies]
@@ -2425,33 +2424,6 @@ platformdirs = ">=3"
 psutil = ">=3.2.2"
 PyYAML = ">=3.13"
 typing-extensions = ">=4.12.0"
-
-[[package]]
-name = "openstacksdk"
-version = "4.22.0"
-description = "An SDK for building applications to work with OpenStack"
-optional = false
-python-versions = ">=3.11"
-groups = ["main"]
-markers = "python_version >= \"3.11\""
-files = [
-    {file = "openstacksdk-4.22.0-py3-none-any.whl", hash = "sha256:e5aafe38e4c338bcb3844f1f446d7761c68477db8cec0e4bb91f4de9d35877c1"},
-    {file = "openstacksdk-4.22.0.tar.gz", hash = "sha256:757f399346f804d0a70b83fead919c498521e509889cd8973ece5cf7a640e6f9"},
-]
-
-[package.dependencies]
-cryptography = ">=2.7"
-decorator = ">=4.4.1"
-"dogpile.cache" = ">=0.6.5"
-iso8601 = ">=0.1.11"
-jmespath = ">=0.9.0"
-jsonpatch = ">=1.16,!=1.20"
-keystoneauth1 = ">=5.16.0"
-os-service-types = ">=1.8.1"
-pbr = ">=2.0.0,!=2.1.0"
-platformdirs = ">=3"
-psutil = ">=3.2.2"
-PyYAML = ">=3.13"
 
 [[package]]
 name = "os-service-types"
@@ -3797,4 +3769,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "0905f8545e146f8b3751a59be3c158281f1e3b06f1af23fa51a3050723d6550a"
+content-hash = "68f118d08aa7082662a7c7cc7443e4fccc1aba23a639af71f82a7624e32112a1"

@@ -45,6 +45,25 @@ def _resolve_cloud_name(args: argparse.Namespace) -> dict | None:
     return None
 
 
+def resolve_credentials_file(cloud: str = 'aws',
+                             cloud_env: str | None = None) -> str | None:
+    """Resolves ``credentials_file`` from the settings for the given cloud and
+    environment, reusing the standard environment resolution.
+
+    This is used by the ``clean`` command, which otherwise does not read the
+    cloud configuration, so that the spawned installer can be pointed at the
+    configured AWS credentials during cluster destruction. Returns ``None``
+    when the cloud or credentials file is not configured.
+    """
+    defaults = settings.as_dict()
+    if cloud not in defaults.get('CLOUD', {}):
+        return None
+    cloud_conf = _resolve_cloud_name(argparse.Namespace(cloud=cloud, cloud_env=cloud_env))
+    if not cloud_conf:
+        return None
+    return cloud_conf.get('credentials_file', None)
+
+
 def read_config(args: argparse.Namespace, default_args: dict) -> dict:
     """
     Reads config from Dynaconf and merges it with arguments provided via commandline.

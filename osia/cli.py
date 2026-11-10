@@ -23,7 +23,7 @@ import distro
 from semantic_version import SimpleSpec  # type: ignore[import-untyped]
 from semantic_version import Version
 
-from .config import read_config
+from .config import read_config, resolve_credentials_file
 from .config.config import (ARCH_AARCH64, ARCH_AMD, ARCH_ARM, ARCH_PPC,
                             ARCH_S390X, ARCH_X86_64)
 from .installer import (delete_cluster, download_installer, install_cluster,
@@ -138,6 +138,12 @@ def _merge_dictionaries(from_args):
     if result.get('cloud'):
         # pylint: disable=unsupported-assignment-operation
         result['cloud']['installer'] = result['installer']
+        result['credentials_file'] = result['cloud'].get('credentials_file')
+    else:
+        # clean does not read the cloud configuration, resolve the credentials
+        # file directly from the settings so the installer can be pointed at it
+        result['credentials_file'] = resolve_credentials_file(
+            cloud_env=getattr(from_args, 'cloud_env', None))
     return result
 
 
@@ -151,7 +157,8 @@ def _exec_install_cluster(args):
         conf['cluster_name'],
         conf['cloud'],
         conf['installer'],
-        dns_settings=conf['dns']
+        dns_settings=conf['dns'],
+        credentials_file=conf['credentials_file']
     )
     if not args.skip_git:
         storage.write_changes(conf['cluster_name'])
@@ -166,7 +173,8 @@ def _exec_delete_cluster(args):
     if not args.skip_git:
         storage.check_repository()
 
-    delete_cluster(conf['cluster_name'], conf['installer'])
+    delete_cluster(conf['cluster_name'], conf['installer'],
+                   credentials_file=conf['credentials_file'])
 
     if not args.skip_git:
         storage.delete_directory(conf['cluster_name'])

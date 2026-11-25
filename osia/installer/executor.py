@@ -29,12 +29,16 @@ class InstallerExecutionException(Exception):
         super().__init__(self, *args, **kwargs)
 
 
-def execute_installer(installer, base_path, operation, os_image=None):
+def execute_installer(installer, base_path, operation, os_image=None, credentials_file=None):
     """Function executes actual installation of OpenShift"""
+    # pylint: disable=too-many-arguments
     additional_env = None
-    if os_image is not None and os_image:
+    if (os_image is not None and os_image) or credentials_file:
         additional_env = environ.copy()
-        additional_env.update({'OPENSHIFT_INSTALL_OS_IMAGE_OVERRIDE': os_image})
+        if os_image is not None and os_image:
+            additional_env['OPENSHIFT_INSTALL_OS_IMAGE_OVERRIDE'] = os_image
+        if credentials_file:
+            additional_env['AWS_SHARED_CREDENTIALS_FILE'] = credentials_file
     with Popen([installer, operation, 'cluster', '--dir', base_path],
                env=additional_env, universal_newlines=True) as proc:
         proc.wait()
@@ -45,7 +49,8 @@ def execute_installer(installer, base_path, operation, os_image=None):
 def install_cluster(cloud_provider,
                     cluster_name, configuration,
                     installer,
-                    dns_settings=None):
+                    dns_settings=None,
+                    credentials_file=None):
     """Function represents main entrypoint to all logic necessary for
     cluster's deployment."""
     # pylint: disable=too-many-arguments
@@ -72,11 +77,12 @@ def install_cluster(cloud_provider,
 
     try:
         execute_installer(installer, cluster_name, 'create',
-                          os_image=getattr(inst, 'os_image', None))
+                          os_image=getattr(inst, 'os_image', None),
+                          credentials_file=credentials_file)
     except InstallerExecutionException as exception:
         logging.error(exception)
         if inst.check_clean():
-            delete_cluster(cluster_name, installer)
+            delete_cluster(cluster_name, installer, credentials_file=credentials_file)
         # Do not continue in case of installer failure
         return
 
@@ -88,7 +94,7 @@ def install_cluster(cloud_provider,
         dns_prov.marshall(cluster_name)
 
 
-def delete_cluster(cluster_name, installer):
+def delete_cluster(cluster_name, installer, credentials_file=None):
     """Function is the controller of all actions leading to the
     cluster's deletion."""
     dns_prov = DNSProvider.instance().load(cluster_name)
@@ -102,7 +108,8 @@ def delete_cluster(cluster_name, installer):
     for k in [1, 2]:
         try:
             logging.debug("Attempt to clean #%d", k)
-            execute_installer(installer, cluster_name, 'destroy')
+            execute_installer(installer, cluster_name, 'destroy',
+                              credentials_file=credentials_file)
             break
         except InstallerExecutionException as exception:
             logging.error("Re-executing installer due to error %s", exception)
